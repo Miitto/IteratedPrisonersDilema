@@ -10,4 +10,7 @@ int main(const int argc, const char* const argv[]) {
     std::cout << msg << std::endl;
     return code;
   }
+
+  auto args = std::get<cli::Args>(options);
+  std::cout << args << std::endl;
 }

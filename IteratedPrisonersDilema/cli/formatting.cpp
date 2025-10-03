@@ -1,0 +1,102 @@
+#include "cli.hpp"
+
+namespace cli {
+  std::ostream& operator<<(std::ostream& os, const std::vector<Payoff>& p) {
+    os << "[";
+    for (size_t i = 0; i < p.size(); ++i) {
+      switch (p[i]) {
+      case Payoff::T:
+        os << "T";
+        break;
+      case Payoff::R:
+        os << "R";
+        break;
+      case Payoff::P:
+        os << "P";
+        break;
+      case Payoff::S:
+        os << "S";
+        break;
+      }
+      if (i < p.size() - 1) {
+        os << ", ";
+      }
+    }
+    os << "]";
+    return os;
+  }
+
+  std::ostream& operator<<(std::ostream& os,
+                           const std::pair<std::vector<Strategy>, double>& s) {
+    os << "[";
+    for (size_t i = 0; i < s.first.size(); ++i) {
+      switch (s.first[i]) {
+      case Strategy::ALLC:
+        os << "ALLC";
+        break;
+      case Strategy::ALLD:
+        os << "ALLD";
+        break;
+      case Strategy::TFT:
+        os << "TFT";
+        break;
+      case Strategy::GRIM:
+        os << "GRIM";
+        break;
+      case Strategy::PAVLOV:
+        os << "PAVLOV";
+        break;
+      case Strategy::RND:
+        os << "RND" << s.second;
+        break;
+      case Strategy::CONTRITE:
+        os << "CONTRITE";
+        break;
+      case Strategy::PROBER:
+        os << "PROBER";
+        break;
+      }
+      if (i < s.first.size() - 1) {
+        os << ", ";
+      }
+    }
+    os << "]";
+    return os;
+  }
+
+  std::ostream& operator<<(std::ostream& os, const Format f) {
+    switch (f) {
+    case Format::TEXT:
+      os << "TEXT";
+      break;
+    case Format::JSON:
+      os << "JSON";
+      break;
+    case Format::CSV:
+      os << "CSV";
+      break;
+    default:
+      os << "UNKNOWN";
+      break;
+    }
+    return os;
+  }
+
+  std::ostream& operator<<(std::ostream& os, const Args& args) {
+    os << "rounds: " << args.rounds << "\n"
+       << "repeats: " << args.repeats << "\n"
+       << "epsilon: " << args.epsilon << "\n"
+       << "seed: " << args.seed << "\n"
+       << "payoffs: " << args.enablePayoffs << "\n"
+       << "strategies: " << args.strategies << "\n"
+       << "format: " << args.format << "\n"
+       << "savePath: " << args.savePath.string() << "\n"
+       << "loadFile: " << args.loadFile.string() << "\n"
+       << "evolve: " << (args.evolve ? "true" : "false") << "\n"
+       << "population: " << args.population << "\n"
+       << "generations: " << args.generations << "\n"
+       << "mutationRate: " << args.mutationRate << "\n";
+    return os;
+  }
+
+} // namespace cli
