@@ -26,37 +26,39 @@ namespace cli {
     return os;
   }
 
-  std::ostream& operator<<(std::ostream& os,
-                           const std::pair<std::vector<Strategy>, double>& s) {
+  std::ostream& operator<<(std::ostream& os, const std::vector<Strategy>& s) {
     os << "[";
-    for (size_t i = 0; i < s.first.size(); ++i) {
-      switch (s.first[i]) {
-      case Strategy::ALLC:
-        os << "ALLC";
-        break;
-      case Strategy::ALLD:
-        os << "ALLD";
-        break;
-      case Strategy::TFT:
-        os << "TFT";
-        break;
-      case Strategy::GRIM:
-        os << "GRIM";
-        break;
-      case Strategy::PAVLOV:
-        os << "PAVLOV";
-        break;
-      case Strategy::RND:
-        os << "RND" << s.second;
-        break;
-      case Strategy::CONTRITE:
-        os << "CONTRITE";
-        break;
-      case Strategy::PROBER:
-        os << "PROBER";
-        break;
+    for (size_t i = 0; i < s.size(); ++i) {
+      auto& strategy = s[i];
+      if (strategy.isRnd()) {
+        os << "RND" << strategy.rnd();
+      } else {
+        auto simple = strategy.simple();
+        switch (simple) {
+        case Strategy::ALLC:
+          os << "ALLC";
+          break;
+        case Strategy::ALLD:
+          os << "ALLD";
+          break;
+        case Strategy::TFT:
+          os << "TFT";
+          break;
+        case Strategy::GRIM:
+          os << "GRIM";
+          break;
+        case Strategy::PAVLOV:
+          os << "PAVLOV";
+          break;
+        case Strategy::CONTRITE:
+          os << "CONTRITE";
+          break;
+        case Strategy::PROBER:
+          os << "PROBER";
+          break;
+        }
       }
-      if (i < s.first.size() - 1) {
+      if (i < s.size() - 1) {
         os << ", ";
       }
     }

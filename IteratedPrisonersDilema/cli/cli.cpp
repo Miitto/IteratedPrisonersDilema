@@ -142,8 +142,8 @@ namespace cli {
     Option<uint32_t> seed("seed", 0);
     Option<std::vector<Payoff>> payoffs(
         "payoff", {Payoff::T, Payoff::R, Payoff ::P, Payoff::S});
-    Option<std::pair<std::vector<Strategy>, double>> strategies(
-        "strategies", {{Strategy::ALLC, Strategy::ALLD}, 0.5});
+    Option<std::vector<Strategy>> strategies("strategies",
+                                             {Strategy::ALLC, Strategy::ALLD});
     Option<Format> format("format", Format::TEXT);
     Option<std::filesystem::path> save("save", "");
     Option<std::filesystem::path> load("load", "");
@@ -257,7 +257,7 @@ namespace cli {
     }
 
     template <>
-    std::variant<std::pair<std::vector<Strategy>, double>, std::string>
+    std::variant<std::vector<Strategy>, std::string>
     parse(std::vector<std::string_view>::const_iterator strs,
           const std::vector<std::string_view>::const_iterator end) {
       std::vector<Strategy> strategies;
@@ -274,15 +274,15 @@ namespace cli {
           commaPos = strs->find(',', pos);
           std::string_view token = strs->substr(pos, commaPos - pos);
           if (token == "ALLC") {
-            strategies.push_back(Strategy::ALLC);
+            strategies.emplace_back(Strategy::ALLC);
           } else if (token == "ALLD") {
-            strategies.push_back(Strategy::ALLD);
+            strategies.emplace_back(Strategy::ALLD);
           } else if (token == "TFT") {
-            strategies.push_back(Strategy::TFT);
+            strategies.emplace_back(Strategy::TFT);
           } else if (token == "GRIM") {
-            strategies.push_back(Strategy::GRIM);
+            strategies.emplace_back(Strategy::GRIM);
           } else if (token == "PAVLOV") {
-            strategies.push_back(Strategy::PAVLOV);
+            strategies.emplace_back(Strategy::PAVLOV);
           } else if (token.starts_with("RND")) {
             if (token.size() < 6) {
               return std::string{
@@ -291,11 +291,11 @@ namespace cli {
                   "the decimal point, and at least one after."};
             }
             randomness = std::stod(std::string{token.substr(3)});
-            strategies.push_back(Strategy::RND);
+            strategies.emplace_back(randomness);
           } else if (token == "CONTRITE") {
-            strategies.push_back(Strategy::CONTRITE);
+            strategies.emplace_back(Strategy::CONTRITE);
           } else if (token == "PROBER") {
-            strategies.push_back(Strategy::PROBER);
+            strategies.emplace_back(Strategy::PROBER);
           } else {
             return std::string{"Unknown strategy: " + std::string{token}};
           }
@@ -306,7 +306,7 @@ namespace cli {
       if (strategies.empty()) {
         return std::string{"Expected at least one strategy."};
       }
-      return std::make_pair(strategies, randomness);
+      return strategies;
     }
 
     template <>
