@@ -1,28 +1,9 @@
 #include "cli.hpp"
 
 namespace cli {
-  std::ostream& operator<<(std::ostream& os, const std::vector<Payoff>& p) {
-    os << "[";
-    for (size_t i = 0; i < p.size(); ++i) {
-      switch (p[i]) {
-      case Payoff::T:
-        os << "T";
-        break;
-      case Payoff::R:
-        os << "R";
-        break;
-      case Payoff::P:
-        os << "P";
-        break;
-      case Payoff::S:
-        os << "S";
-        break;
-      }
-      if (i < p.size() - 1) {
-        os << ", ";
-      }
-    }
-    os << "]";
+  std::ostream& operator<<(std::ostream& os, const Payoffs& p) {
+    os << "{T: " << p.temptation << ", R: " << p.reward
+       << ", P: " << p.punishment << ", S: " << p.sucker << "}";
     return os;
   }
 
@@ -89,7 +70,7 @@ namespace cli {
        << "repeats: " << args.repeats << "\n"
        << "epsilon: " << args.epsilon << "\n"
        << "seed: " << args.seed << "\n"
-       << "payoffs: " << args.enablePayoffs << "\n"
+       << "payoffs: " << args.payoffs << "\n"
        << "strategies: " << args.strategies << "\n"
        << "format: " << args.format << "\n"
        << "savePath: " << args.savePath.string() << "\n"

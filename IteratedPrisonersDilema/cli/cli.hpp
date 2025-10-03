@@ -10,7 +10,12 @@ namespace cli {
   std::vector<std::string_view> get_cli_args(int argc,
                                              const char* const argv[]);
 
-  enum class Payoff { T = 0, R = 1, P = 2, S = 3 };
+  struct Payoffs {
+    double temptation;
+    double reward;
+    double punishment;
+    double sucker;
+  };
 
   // TODO: Change this to a union of Strategy or double for RND's randomness.
   // Can use top bit as the flag since sign bit is irrelevent. Then remove RND
@@ -40,7 +45,7 @@ namespace cli {
 
   enum class Format { TEXT, JSON, CSV };
 
-  std::ostream& operator<<(std::ostream& os, const std::vector<Payoff>& p);
+  std::ostream& operator<<(std::ostream& os, const Payoffs& p);
   std::ostream& operator<<(std::ostream& os, const std::vector<Strategy>& s);
   std::ostream& operator<<(std::ostream& os, const Format f);
 
@@ -50,7 +55,7 @@ namespace cli {
     uint32_t repeats;
     double epsilon;
     uint32_t seed;
-    std::vector<Payoff> enablePayoffs;
+    Payoffs payoffs;
     std::vector<Strategy> strategies;
     Format format;
     std::filesystem::path savePath;

@@ -140,8 +140,7 @@ namespace cli {
     Option<uint32_t> repeats("repeats", 10);
     Option<double> epsilon("epsilon", 0.0);
     Option<uint32_t> seed("seed", 0);
-    Option<std::vector<Payoff>> payoffs(
-        "payoff", {Payoff::T, Payoff::R, Payoff ::P, Payoff::S});
+    Option<Payoffs> payoffs("payoff", {5, 3, 1, 0});
     Option<std::vector<Strategy>> strategies("strategies",
                                              {Strategy::ALLC, Strategy::ALLD});
     Option<Format> format("format", Format::TEXT);
@@ -151,6 +150,8 @@ namespace cli {
     Option<uint32_t> population("population", 100);
     Option<uint32_t> generations("generations", 50);
     Option<double> mutationRate("mutation", 0.01);
+
+    Option<bool> help("help", false);
 
     auto it = args.cbegin();
     ++it; // skip program name
@@ -171,17 +172,58 @@ namespace cli {
       PARSE(population);
       PARSE(generations);
       PARSE(mutationRate);
+      PARSE(help);
 
       if (it != args.cend() && (parsed & ParseResult::SUCCESS) == 0) {
         return std::tuple{"Unknown option: " + std::string{*it}, 1u};
       }
     }
 
+    if (help.get()) {
+      std::string helpMsg =
+          "Usage: `IteratedPrisonersDilema [options]`\n\nOptions:\n"
+          "  --rounds <uint32_t>        Number of rounds per match "
+          "(default: 100)\n"
+          "  --repeats <uint32_t>       Number of matches per pair of "
+          "strategies (default: 10)\n"
+          "  --epsilon <double>         Probability of a mistake per "
+          "move (default: 0.0)\n"
+          "  --seed <uint32_t>          Seed for random number "
+          "generator (default: 0)\n"
+          "  --payoff <T,R,P,S>         Payoff values as four "
+          "doubles seperated by commas or spaces (default: "
+          "5,3,1,0)\n"
+          "  --strategies <STRATEGIES>  Comma or space seperated list "
+          "of strategies to use. Strategies are one of ALLC, "
+          "ALLD, TFT, GRIM, PAVLOV, CONTRITE, PROBER, or RNDX "
+          "where X is a floating point number in [0,1] with one digit before "
+          "the decimal point and at least one after (e.g `RND0.3` or `RND1.0`, "
+          "not "
+          "`RND.3` or `RND1.`). "
+          "(default: ALLC,ALLD)\n"
+          "  --format <text|json|csv>   Output format (default: text)\n"
+          "  --save <path>              Path to save results to "
+          "(default: none)\n"
+          "  --load <path>              Path to load results from "
+          "(default: none)\n"
+          "  --evolve                   Whether to run an evolution "
+          "simulation instead of a round robin tournament "
+          "(default: false)\n"
+          "  --population <uint32_t>    Population size for evolution "
+          "(default: 100)\n"
+          "  --generations <uint32_t>   Number of generations for "
+          "evolution (default: 50)\n"
+          "  --mutation <double>        Mutation rate for evolution "
+          "(default: 0.01)\n"
+          "  --help                     Show this help message\n";
+      return std::tuple{helpMsg, 0u};
+    }
+
     return Args{.rounds = rounds,
                 .repeats = repeats,
                 .epsilon = epsilon,
                 .seed = seed,
-                .enablePayoffs = payoffs,
+                .payoffs = payoffs,
                 .strategies = strategies,
                 .format = format,
                 .savePath = save,
@@ -222,12 +264,13 @@ namespace cli {
     }
 
     template <>
-    std::variant<std::vector<Payoff>, std::string> parse<std::vector<Payoff>>(
-        std::vector<std::string_view>::const_iterator strs,
-        const std::vector<std::string_view>::const_iterator end) {
-      std::vector<Payoff> payoffs;
-      for (; strs != end; ++strs) {
-        if (Option<std::vector<Payoff>>::isAnOption(*strs)) {
+    std::variant<Payoffs, std::string>
+    parse(std::vector<std::string_view>::const_iterator strs,
+          const std::vector<std::string_view>::const_iterator end) {
+      Payoffs payoffs;
+      int set = 0;
+      for (; set < 4 && strs != end; ++strs) {
+        if (Option<Payoffs>::isAnOption(*strs)) {
           break;
         }
         size_t pos = 0;
@@ -236,22 +279,31 @@ namespace cli {
         do {
           commaPos = strs->find(',', pos);
           std::string_view token = strs->substr(pos, commaPos - pos);
-          if (token == "T") {
-            payoffs.push_back(Payoff::T);
-          } else if (token == "R") {
-            payoffs.push_back(Payoff::R);
-          } else if (token == "P") {
-            payoffs.push_back(Payoff::P);
-          } else if (token == "S") {
-            payoffs.push_back(Payoff::S);
-          } else {
-            return std::string{"Unknown payoff: " + std::string{token}};
+          double val = std::stod(std::string{token});
+          switch (set) {
+          case 0:
+            payoffs.temptation = val;
+            ++set;
+            break;
+          case 1:
+            payoffs.reward = val;
+            ++set;
+            break;
+          case 2:
+            payoffs.punishment = val;
+            ++set;
+            break;
+          case 3:
+            payoffs.sucker = val;
+            ++set;
+            break;
           }
           pos = commaPos + 1;
-        } while (commaPos != std::string_view::npos);
+        } while (set < 4 && commaPos != std::string_view::npos);
       }
-      if (payoffs.empty()) {
-        return std::string{"Expected at least one payoff."};
+      if (set != 4) {
+        return std::string{"Expected 4 payoffs, T,R,P,S where T R P S are "
+                           "doubles seperated by either commas or spaces."};
       }
       return payoffs;
     }
@@ -334,6 +386,13 @@ namespace cli {
       std::string_view pathStr = *strs;
       ++strs;
       return std::filesystem::path{std::string{pathStr}};
+    }
+
+    template <>
+    std::variant<std::monostate, std::string> parse<std::monostate>(
+        std::vector<std::string_view>::const_iterator strs,
+        const std::vector<std::string_view>::const_iterator end) {
+      return std::monostate{};
     }
 
   } // namespace
