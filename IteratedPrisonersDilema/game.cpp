@@ -1,4 +1,5 @@
 #include "game.hpp"
+#include <iostream>
 #include <random>
 
 #include "strats/allc.hpp"
@@ -39,10 +40,10 @@ Game::Game(const cli::Args& args, cli::Strategy strat1, cli::Strategy strat2)
 
 namespace {
   constexpr std::pair<strats::Payoff, strats::Payoff> RESULT_MATRIX[2][2] = {
-      {{strats::Payoff::Reward, strats::Payoff::Sucker},          // C, C
-       {strats::Payoff::Temptation, strats::Payoff::Punishment}}, // C, D
-      {{strats::Payoff::Punishment, strats::Payoff::Temptation},  // D, C
-       {strats::Payoff::Sucker, strats::Payoff::Sucker}}          // D, D
+      {{strats::Payoff::Reward, strats::Payoff::Reward},         // C, C
+       {strats::Payoff::Sucker, strats::Payoff::Temptation}},    // C, D
+      {{strats::Payoff::Temptation, strats::Payoff::Sucker},     // D, C
+       {strats::Payoff::Punishment, strats::Payoff::Punishment}} // D, D
   };
 }
 
@@ -53,21 +54,16 @@ void Game::playRound() {
   auto choice1 = s1.getChoice();
   auto choice2 = s2.getChoice();
 
-  std::mt19937 gen(m_args.seed);
-  std::uniform_real_distribution dist(0.0, 1.0);
-
   auto flipChoice = [](strats::Choice c) -> strats::Choice {
     return (c == strats::Choice::COOPERATE) ? strats::Choice::DEFECT
                                             : strats::Choice::COOPERATE;
   };
 
-  if (s1.suseptibleToError() &&
-      dist(gen) < m_args.epsilon) { // Mistake for strat1
+  if (dist(gen) < m_args.epsilon) { // Mistake for strat1
     choice1 = flipChoice(choice1);
   }
 
-  if (s2.suseptibleToError() &&
-      dist(gen) < m_args.epsilon) { // Mistake for strat2
+  if (dist(gen) < m_args.epsilon) {
     choice2 = flipChoice(choice2);
   }
 
@@ -86,4 +82,40 @@ void Game::play() {
   for (uint32_t round = 0; round < m_args.rounds; ++round) {
     playRound();
   }
+}
+
+std::pair<double, double> Game::getTotalScores() const {
+  double total1 = 0.0;
+  double total2 = 0.0;
+  for (auto& [r1, r2] : m_results) {
+    total1 += strats::getPayoffValue(m_args.payoffs, r1);
+    total2 += strats::getPayoffValue(m_args.payoffs, r2);
+  }
+  return {total1, total2};
+}
+
+std::pair<double, double>
+Game::getAverageScores(const std::pair<double, double>& totals) const {
+  return {totals.first / m_args.rounds, totals.second / m_args.rounds};
+}
+
+std::pair<double, double> Game::getAverageScores() const {
+  auto totals = getTotalScores();
+  return getAverageScores(totals);
+}
+
+void Game::printResults(std::ostream& os) const {
+  os << m_strat1->getStrat() << " vs " << m_strat2->getStrat() << " results:\n";
+  for (auto& [r1, r2] : m_results) {
+    os << "  " << r1 << " - " << r2 << "\n";
+  }
+
+  auto totals = getTotalScores();
+
+  os << "Total scores: " << totals.first << " - " << totals.second << "\n";
+
+  auto averages = getAverageScores(totals);
+
+  os << "Average scores: " << averages.first << " - " << averages.second
+     << "\n";
 }

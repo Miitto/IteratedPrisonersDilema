@@ -4,6 +4,7 @@
 #include "strats/strategy.hpp"
 
 #include <memory>
+#include <random>
 
 class Game {
   const cli::Args& m_args;
@@ -13,10 +14,20 @@ class Game {
 
   std::vector<std::pair<strats::Payoff, strats::Payoff>> m_results{};
 
+  std::mt19937 gen{m_args.seed};
+  std::uniform_real_distribution<double> dist{0.0, 1.0};
+
   void playRound();
 
 public:
   Game(const cli::Args& args, cli::Strategy strat1, cli::Strategy strat2);
 
   void play();
+
+  std::pair<double, double> getTotalScores() const;
+  std::pair<double, double> getAverageScores() const;
+  std::pair<double, double>
+  getAverageScores(const std::pair<double, double>& totals) const;
+
+  void printResults(std::ostream& os) const;
 };

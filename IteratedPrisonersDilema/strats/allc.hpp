@@ -13,8 +13,6 @@ namespace strats {
     Choice getChoice() const override { return Choice::COOPERATE; }
     void giveResult(Payoff) override {}
 
-    bool suseptibleToError() const override { return false; }
-
     ~AllC() override = default;
   };
 } // namespace strats

@@ -1,8 +1,7 @@
 #include "cli/cli.hpp"
 #include <iostream>
 
-#include "strats/allc.hpp"
-#include "strats/strategy.hpp"
+#include "game.hpp"
 
 int main(const int argc, const char* const argv[]) {
   auto cliArgs = cli::get_cli_args(argc, argv);
@@ -16,4 +15,10 @@ int main(const int argc, const char* const argv[]) {
 
   auto args = std::get<cli::Args>(options);
   std::cout << args << std::endl;
+
+  Game game(args, args.strategies[0], args.strategies[1]);
+
+  game.play();
+
+  game.printResults(std::cout);
 }

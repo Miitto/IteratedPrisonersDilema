@@ -46,6 +46,7 @@ namespace cli {
   enum class Format { TEXT, JSON, CSV };
 
   std::ostream& operator<<(std::ostream& os, const Payoffs& p);
+  std::ostream& operator<<(std::ostream& os, const Strategy s);
   std::ostream& operator<<(std::ostream& os, const std::vector<Strategy>& s);
   std::ostream& operator<<(std::ostream& os, const Format f);
 

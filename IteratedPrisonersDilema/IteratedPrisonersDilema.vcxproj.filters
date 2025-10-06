@@ -33,11 +33,14 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cli\formatting.cpp">
+    <ClCompile Include="cli\cli-formatting.cpp">
       <Filter>Source Files\CLI</Filter>
     </ClCompile>
     <ClCompile Include="game.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="strats\strat-formatting.cpp">
+      <Filter>Source Files\strats</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
