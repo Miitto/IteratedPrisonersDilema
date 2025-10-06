@@ -19,6 +19,12 @@
     <Filter Include="Header Files\CLI">
       <UniqueIdentifier>{19d30eca-9493-40d5-8d63-333597fa3d46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\strats">
+      <UniqueIdentifier>{a6cdd151-8096-492f-9be0-f6b4b4145224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\strats">
+      <UniqueIdentifier>{b8900326-33e0-4f71-ab58-2e6a8a7c4691}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cli\cli.cpp">
@@ -30,6 +36,9 @@
     <ClCompile Include="cli\formatting.cpp">
       <Filter>Source Files\CLI</Filter>
     </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.clang-format" />
@@ -38,6 +47,18 @@
   <ItemGroup>
     <ClInclude Include="cli\cli.hpp">
       <Filter>Header Files\CLI</Filter>
+    </ClInclude>
+    <ClInclude Include="strats\strategy.hpp">
+      <Filter>Header Files\strats</Filter>
+    </ClInclude>
+    <ClInclude Include="strats\allc.hpp">
+      <Filter>Header Files\strats</Filter>
+    </ClInclude>
+    <ClInclude Include="game.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="strats\alld.hpp">
+      <Filter>Header Files\strats</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,6 +1,9 @@
 #include "cli/cli.hpp"
 #include <iostream>
 
+#include "strats/allc.hpp"
+#include "strats/strategy.hpp"
+
 int main(const int argc, const char* const argv[]) {
   auto cliArgs = cli::get_cli_args(argc, argv);
 

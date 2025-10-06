@@ -71,6 +71,24 @@ namespace cli {
         ++strs;
 
         if constexpr (std::is_same_v<ARG, bool>) {
+          if (strs != end && !isAnOption(*strs)) {
+            switch ((*strs)[0]) {
+            case '0':
+              return false;
+            case '1':
+              return true;
+            default: {
+              if (*strs == "true" || *strs == "false") {
+                return *strs == "true";
+              } else {
+                return std::string{"Failed to parse argument for option --" +
+                                   std::string(name) +
+                                   ": expected `0`, `1`, `true`, `false`, or "
+                                   "no argument to default to true."};
+              }
+            }
+            }
+          }
           return true;
         }
 
@@ -206,7 +224,10 @@ namespace cli {
           "(default: none)\n"
           "  --load <path>              Path to load results from "
           "(default: none)\n"
-          "  --evolve                   Whether to run an evolution "
+          "  --evolve                   Whether to run an evolution. Its "
+          "presence indicates true and its absence indicates false, although "
+          "`0`, `1`, `true` and `false` can "
+          "be used to set the value explicitly."
           "simulation instead of a round robin tournament "
           "(default: false)\n"
           "  --population <uint32_t>    Population size for evolution "
@@ -387,14 +408,6 @@ namespace cli {
       ++strs;
       return std::filesystem::path{std::string{pathStr}};
     }
-
-    template <>
-    std::variant<std::monostate, std::string> parse<std::monostate>(
-        std::vector<std::string_view>::const_iterator strs,
-        const std::vector<std::string_view>::const_iterator end) {
-      return std::monostate{};
-    }
-
   } // namespace
 #pragma endregion
 } // namespace cli
