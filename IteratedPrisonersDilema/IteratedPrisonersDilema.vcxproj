@@ -31,7 +31,7 @@
     <ClCompile Include="cli\cli-formatting.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="strats\strat-formatting.cpp" />
+    <ClCompile Include="strats\strats.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.clang-format" />
@@ -42,6 +42,7 @@
     <ClInclude Include="game.hpp" />
     <ClInclude Include="strats\allc.hpp" />
     <ClInclude Include="strats\alld.hpp" />
+    <ClInclude Include="strats\grim.hpp" />
     <ClInclude Include="strats\strategy.hpp" />
     <ClInclude Include="strats\tft.hpp" />
   </ItemGroup>

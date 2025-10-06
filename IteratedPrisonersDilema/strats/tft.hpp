@@ -13,8 +13,8 @@ namespace strats {
     cli::Strategy getStrat() override { return cli::Strategy::TFT; }
 
     Choice getChoice() const override { return m_opponentLastChoice; }
-    void giveResult(Payoff p) override {
-      m_opponentLastChoice = getOpponentsChoice(p);
+    void giveResult(Payoff, Choice oppChoice) override {
+      m_opponentLastChoice = oppChoice;
     }
 
     ~Tft() override = default;

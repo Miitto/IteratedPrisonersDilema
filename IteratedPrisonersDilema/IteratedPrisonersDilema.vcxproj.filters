@@ -39,7 +39,7 @@
     <ClCompile Include="game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="strats\strat-formatting.cpp">
+    <ClCompile Include="strats\strats.cpp">
       <Filter>Source Files\strats</Filter>
     </ClCompile>
   </ItemGroup>
@@ -61,6 +61,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="strats\alld.hpp">
+      <Filter>Header Files\strats</Filter>
+    </ClInclude>
+    <ClInclude Include="strats\tft.hpp">
+      <Filter>Header Files\strats</Filter>
+    </ClInclude>
+    <ClInclude Include="strats\grim.hpp">
       <Filter>Header Files\strats</Filter>
     </ClInclude>
   </ItemGroup>

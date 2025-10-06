@@ -11,7 +11,7 @@ namespace strats {
     cli::Strategy getStrat() override { return cli::Strategy::ALLD; }
 
     Choice getChoice() const override { return Choice::DEFECT; }
-    void giveResult(Payoff) override {}
+    void giveResult(Payoff, Choice) override {}
 
     ~AllD() override = default;
   };

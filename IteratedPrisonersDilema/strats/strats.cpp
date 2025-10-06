@@ -18,19 +18,4 @@ namespace strats {
     }
     return os;
   }
-
-  Choice getOpponentsChoice(Payoff p) {
-    switch (p) {
-    case Payoff::Temptation:
-      return Choice::COOPERATE;
-    case Payoff::Reward:
-      return Choice::COOPERATE;
-    case Payoff::Punishment:
-      return Choice::DEFECT;
-    case Payoff::Sucker:
-      return Choice::DEFECT;
-    }
-    // Should be unreachable
-    return Choice::COOPERATE;
-  }
 } // namespace strats
