@@ -11,6 +11,8 @@ Global
 		Example1|x86 = Example1|x86
 		Help|x64 = Help|x64
 		Help|x86 = Help|x86
+		ProberTest|x64 = ProberTest|x64
+		ProberTest|x86 = ProberTest|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
@@ -23,6 +25,10 @@ Global
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Help|x64.Build.0 = Help|x64
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Help|x86.ActiveCfg = Help|Win32
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Help|x86.Build.0 = Help|Win32
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.ProberTest|x64.ActiveCfg = ProberTest|x64
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.ProberTest|x64.Build.0 = ProberTest|x64
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.ProberTest|x86.ActiveCfg = ProberTest|Win32
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.ProberTest|x86.Build.0 = ProberTest|Win32
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Release|x64.ActiveCfg = Release|x64
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Release|x64.Build.0 = Release|x64
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Release|x86.ActiveCfg = Release|Win32

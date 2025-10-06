@@ -168,6 +168,7 @@ namespace cli {
     Option<uint32_t> population("population", 100);
     Option<uint32_t> generations("generations", 50);
     Option<double> mutationRate("mutation", 0.01);
+    Option<bool> verbose("verbose", false);
 
     Option<bool> help("help", false);
 
@@ -191,6 +192,7 @@ namespace cli {
       PARSE(generations);
       PARSE(mutationRate);
       PARSE(help);
+      PARSE(verbose);
 
       if (it != args.cend() && (parsed & ParseResult::SUCCESS) == 0) {
         return std::tuple{"Unknown option: " + std::string{*it}, 1u};
@@ -236,6 +238,7 @@ namespace cli {
           "evolution (default: 50)\n"
           "  --mutation <double>        Mutation rate for evolution "
           "(default: 0.01)\n"
+          "  --verbose                  Whether to print verbose output.\n"
           "  --help                     Show this help message\n";
       return std::tuple{helpMsg, 0u};
     }
@@ -252,7 +255,8 @@ namespace cli {
                 .evolve = evolve,
                 .population = population,
                 .generations = generations,
-                .mutationRate = mutationRate};
+                .mutationRate = mutationRate,
+                .verbose = verbose};
   }
 
 #pragma region ParseSpecializations

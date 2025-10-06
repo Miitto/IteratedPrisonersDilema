@@ -4,15 +4,21 @@
 
 #include "strats/allc.hpp"
 #include "strats/alld.hpp"
+#include "strats/ctft.hpp"
+#include "strats/grim.hpp"
+#include "strats/pavlov.hpp"
+#include "strats/prober.hpp"
+#include "strats/rnd.hpp"
+#include "strats/tft.hpp"
 
-Game::Game(const cli::Args& args, cli::Strategy strat1, cli::Strategy strat2)
-    : m_args(args) {
+Game::Game(const cli::Args& args, cli::Strategy strat1, cli::Strategy strat2,
+           int repeat)
+    : m_args(args), gen(args.seed + repeat) {
 
   auto makeStrat =
       [this](cli::Strategy s) -> std::unique_ptr<strats::Strategy> {
     if (s.isRnd()) {
-      // TODO: Implement random strategy
-      throw std::runtime_error("Random strategies are not yet implemented");
+      return std::make_unique<strats::Rnd>(m_args.payoffs, s.rnd());
     }
 
     switch (s.simple()) {
@@ -22,12 +28,20 @@ Game::Game(const cli::Args& args, cli::Strategy strat1, cli::Strategy strat2)
     case cli::Strategy::ALLD: {
       return std::make_unique<strats::AllD>(m_args.payoffs);
     }
-    case cli::Strategy::TFT:
-    case cli::Strategy::GRIM:
-    case cli::Strategy::PAVLOV:
-    case cli::Strategy::CONTRITE:
+    case cli::Strategy::TFT: {
+      return std::make_unique<strats::Tft>(m_args.payoffs);
+    }
+    case cli::Strategy::GRIM: {
+      return std::make_unique<strats::Grim>(m_args.payoffs);
+    }
+    case cli::Strategy::PAVLOV: {
+      return std::make_unique<strats::Pavlov>(m_args.payoffs);
+    }
+    case cli::Strategy::CONTRITE: {
+      return std::make_unique<strats::CTft>(m_args.payoffs);
+    }
     case cli::Strategy::PROBER:
-      throw std::runtime_error("Strategy not yet implemented");
+      return std::make_unique<strats::Prober>(m_args.payoffs);
     }
 
     // Should be unreachable
@@ -72,8 +86,8 @@ void Game::playRound() {
 
   auto& [result1, result2] = pair;
 
-  s1.giveResult(result1);
-  s2.giveResult(result2);
+  s1.giveResult(result1, choice2);
+  s2.giveResult(result2, choice1);
 
   m_results.push_back(pair);
 }
@@ -106,8 +120,11 @@ std::pair<double, double> Game::getAverageScores() const {
 
 void Game::printResults(std::ostream& os) const {
   os << m_strat1->getStrat() << " vs " << m_strat2->getStrat() << " results:\n";
-  for (auto& [r1, r2] : m_results) {
-    os << "  " << r1 << " - " << r2 << "\n";
+
+  if (m_args.verbose) {
+    for (auto& [r1, r2] : m_results) {
+      os << "  " << r1 << " - " << r2 << "\n";
+    }
   }
 
   auto totals = getTotalScores();

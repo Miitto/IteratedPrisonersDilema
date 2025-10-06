@@ -8,11 +8,11 @@ namespace strats {
     Choice m_opponentLastChoice = Choice::COOPERATE;
 
   public:
-    Tft(const cli::Payoffs& payoffs) : Strategy(payoffs) {}
+    Tft(const cli::Args& args) : Strategy(args) {}
 
     cli::Strategy getStrat() override { return cli::Strategy::TFT; }
 
-    Choice getChoice() const override { return m_opponentLastChoice; }
+    Choice getChoice() override { return m_opponentLastChoice; }
     void giveResult(Payoff, Choice oppChoice) override {
       m_opponentLastChoice = oppChoice;
     }

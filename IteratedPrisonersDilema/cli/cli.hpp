@@ -65,6 +65,7 @@ namespace cli {
     uint32_t population;
     uint32_t generations;
     double mutationRate;
+    bool verbose;
 
     static std::variant<Args, std::tuple<std::string, uint32_t>>
     fromArgs(const std::vector<std::string_view> args);

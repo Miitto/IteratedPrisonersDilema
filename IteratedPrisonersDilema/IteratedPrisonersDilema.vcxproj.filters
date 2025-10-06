@@ -42,6 +42,9 @@
     <ClCompile Include="strats\strats.cpp">
       <Filter>Source Files\strats</Filter>
     </ClCompile>
+    <ClCompile Include="tournament.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.clang-format" />
@@ -68,6 +71,21 @@
     </ClInclude>
     <ClInclude Include="strats\grim.hpp">
       <Filter>Header Files\strats</Filter>
+    </ClInclude>
+    <ClInclude Include="strats\pavlov.hpp">
+      <Filter>Header Files\strats</Filter>
+    </ClInclude>
+    <ClInclude Include="strats\rnd.hpp">
+      <Filter>Header Files\strats</Filter>
+    </ClInclude>
+    <ClInclude Include="strats\ctft.hpp">
+      <Filter>Header Files\strats</Filter>
+    </ClInclude>
+    <ClInclude Include="strats\prober.hpp">
+      <Filter>Header Files\strats</Filter>
+    </ClInclude>
+    <ClInclude Include="tournament.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include "../cli/cli.hpp"
@@ -9,11 +8,11 @@ namespace strats {
     bool m_triggered = false;
 
   public:
-    Grim(const cli::Payoffs& payoffs) : Strategy(payoffs) {}
+    Grim(const cli::Args& args) : Strategy(args) {}
 
     cli::Strategy getStrat() override { return cli::Strategy::GRIM; }
 
-    Choice getChoice() const override {
+    Choice getChoice() override {
       return m_triggered ? Choice::DEFECT : Choice::COOPERATE;
     }
     void giveResult(Payoff, Choice oppChoice) override {

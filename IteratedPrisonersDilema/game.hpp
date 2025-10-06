@@ -14,13 +14,14 @@ class Game {
 
   std::vector<std::pair<strats::Payoff, strats::Payoff>> m_results{};
 
-  std::mt19937 gen{m_args.seed};
+  std::mt19937 gen;
   std::uniform_real_distribution<double> dist{0.0, 1.0};
 
   void playRound();
 
 public:
-  Game(const cli::Args& args, cli::Strategy strat1, cli::Strategy strat2);
+  Game(const cli::Args& args, cli::Strategy strat1, cli::Strategy strat2,
+       int repeat);
 
   void play();
 

@@ -6,11 +6,11 @@
 namespace strats {
   class AllC : public Strategy {
   public:
-    AllC(const cli::Payoffs& payoffs) : Strategy(payoffs) {}
+    AllC(const cli::Args& args) : Strategy(args) {}
 
     cli::Strategy getStrat() override { return cli::Strategy::ALLC; }
 
-    Choice getChoice() const override { return Choice::COOPERATE; }
+    Choice getChoice() override { return Choice::COOPERATE; }
     void giveResult(Payoff, Choice) override {}
 
     ~AllC() override = default;

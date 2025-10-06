@@ -82,7 +82,8 @@ namespace cli {
        << "evolve: " << (args.evolve ? "true" : "false") << "\n"
        << "population: " << args.population << "\n"
        << "generations: " << args.generations << "\n"
-       << "mutationRate: " << args.mutationRate << "\n";
+       << "mutationRate: " << args.mutationRate << "\n"
+       << "verbose: " << (args.verbose ? "true" : "false") << "\n";
     return os;
   }
 

@@ -29,14 +29,14 @@ namespace strats {
 
   class Strategy {
   protected:
-    const cli::Payoffs& m_payoffs;
+    const cli::Args& m_args;
 
-    Strategy(const cli::Payoffs& payoffs) : m_payoffs(payoffs) {}
+    Strategy(const cli::Args& args) : m_args(args) {}
 
   public:
     virtual cli::Strategy getStrat() = 0;
 
-    virtual Choice getChoice() const = 0;
+    virtual Choice getChoice() = 0;
     virtual void giveResult(Payoff result, Choice oppChoice) = 0;
 
     virtual ~Strategy() = default;
