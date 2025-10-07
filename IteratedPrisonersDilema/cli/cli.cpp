@@ -243,6 +243,22 @@ namespace cli {
       return std::tuple{helpMsg, 0u};
     }
 
+    if (payoffs.get().temptation <= payoffs.get().reward ||
+        payoffs.get().reward <= payoffs.get().punishment ||
+        payoffs.get().punishment <= payoffs.get().sucker) {
+      std::cerr << "Warn: Suspicious payoffs. Should satisfy T > R > P > S."
+                << std::endl;
+    }
+
+    if (payoffs.get().reward * 2 <=
+        payoffs.get().temptation + payoffs.get().sucker) {
+      std::cerr
+          << "Warn: Suspicious payoffs. Should satisfy 2R > T + S (to prevent "
+             "alternating cooperation and defection from being better than "
+             "mutual cooperation)."
+          << std::endl;
+    }
+
     return Args{.rounds = rounds,
                 .repeats = repeats,
                 .epsilon = epsilon,
