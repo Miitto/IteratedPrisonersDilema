@@ -17,7 +17,7 @@ namespace strats {
   public:
     Prober(const cli::Args& args) : Tft(args) {}
 
-    cli::Strategy getStrat() override { return cli::Strategy::PROBER; }
+    cli::Strategy getStrat() const override { return cli::Strategy::PROBER; }
 
     Choice getChoice() override {
       if (m_turn < 4)

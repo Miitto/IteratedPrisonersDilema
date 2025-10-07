@@ -15,7 +15,7 @@ namespace strats {
   public:
     Rnd(const cli::Args& args, double rnd) : Strategy(args), m_rnd(rnd) {}
 
-    cli::Strategy getStrat() override { return cli::Strategy{m_rnd}; }
+    cli::Strategy getStrat() const override { return cli::Strategy{m_rnd}; }
 
     Choice getChoice() override {
       return m_dist(m_gen) < m_rnd ? Choice::COOPERATE : Choice::DEFECT;

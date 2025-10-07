@@ -9,7 +9,9 @@ namespace cli {
 
   std::ostream& operator<<(std::ostream& os, const Strategy s) {
     if (s.isRnd()) {
-      os << "RND" << s.rnd();
+      std::stringstream ss;
+      ss << "RND" << s.rnd();
+      os << ss.str();
     } else {
       auto simple = s.simple();
       switch (simple) {

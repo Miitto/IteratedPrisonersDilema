@@ -12,7 +12,7 @@ namespace strats {
   public:
     CTft(const cli::Args& args) : Strategy(args) {}
 
-    cli::Strategy getStrat() override { return cli::Strategy::CONTRITE; }
+    cli::Strategy getStrat() const override { return cli::Strategy::CONTRITE; }
 
     Choice getChoice() override {
       m_ownLastChoice = m_opponentLastChoice;

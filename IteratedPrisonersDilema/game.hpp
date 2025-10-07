@@ -31,4 +31,7 @@ public:
   getAverageScores(const std::pair<double, double>& totals) const;
 
   void printResults(std::ostream& os) const;
+
+  const strats::Strategy& getStrat1() const { return *m_strat1; }
+  const strats::Strategy& getStrat2() const { return *m_strat2; }
 };

@@ -18,30 +18,30 @@ Game::Game(const cli::Args& args, cli::Strategy strat1, cli::Strategy strat2,
   auto makeStrat =
       [this](cli::Strategy s) -> std::unique_ptr<strats::Strategy> {
     if (s.isRnd()) {
-      return std::make_unique<strats::Rnd>(m_args.payoffs, s.rnd());
+      return std::make_unique<strats::Rnd>(m_args, s.rnd());
     }
 
     switch (s.simple()) {
     case cli::Strategy::ALLC: {
-      return std::make_unique<strats::AllC>(m_args.payoffs);
+      return std::make_unique<strats::AllC>(m_args);
     }
     case cli::Strategy::ALLD: {
-      return std::make_unique<strats::AllD>(m_args.payoffs);
+      return std::make_unique<strats::AllD>(m_args);
     }
     case cli::Strategy::TFT: {
-      return std::make_unique<strats::Tft>(m_args.payoffs);
+      return std::make_unique<strats::Tft>(m_args);
     }
     case cli::Strategy::GRIM: {
-      return std::make_unique<strats::Grim>(m_args.payoffs);
+      return std::make_unique<strats::Grim>(m_args);
     }
     case cli::Strategy::PAVLOV: {
-      return std::make_unique<strats::Pavlov>(m_args.payoffs);
+      return std::make_unique<strats::Pavlov>(m_args);
     }
     case cli::Strategy::CONTRITE: {
-      return std::make_unique<strats::CTft>(m_args.payoffs);
+      return std::make_unique<strats::CTft>(m_args);
     }
     case cli::Strategy::PROBER:
-      return std::make_unique<strats::Prober>(m_args.payoffs);
+      return std::make_unique<strats::Prober>(m_args);
     }
 
     // Should be unreachable

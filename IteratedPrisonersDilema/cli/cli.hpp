@@ -40,6 +40,10 @@ namespace cli {
       return r;
     }
 
+    bool operator==(const Strategy& other) const {
+      return isRandom == other.isRandom && bits == other.bits;
+    }
+
     Simple simple() const { return static_cast<Simple>(bits); }
   };
 

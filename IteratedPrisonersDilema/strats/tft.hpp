@@ -10,7 +10,7 @@ namespace strats {
   public:
     Tft(const cli::Args& args) : Strategy(args) {}
 
-    cli::Strategy getStrat() override { return cli::Strategy::TFT; }
+    cli::Strategy getStrat() const override { return cli::Strategy::TFT; }
 
     Choice getChoice() override { return m_opponentLastChoice; }
     void giveResult(Payoff, Choice oppChoice) override {

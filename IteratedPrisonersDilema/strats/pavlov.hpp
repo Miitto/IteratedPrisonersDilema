@@ -10,7 +10,7 @@ namespace strats {
   public:
     Pavlov(const cli::Args& args) : Strategy(args) {}
 
-    cli::Strategy getStrat() override { return cli::Strategy::PAVLOV; }
+    cli::Strategy getStrat() const override { return cli::Strategy::PAVLOV; }
 
     Choice getChoice() override { return choice; }
     void giveResult(Payoff p, Choice) override {

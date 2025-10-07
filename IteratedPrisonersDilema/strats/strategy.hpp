@@ -34,7 +34,7 @@ namespace strats {
     Strategy(const cli::Args& args) : m_args(args) {}
 
   public:
-    virtual cli::Strategy getStrat() = 0;
+    virtual cli::Strategy getStrat() const = 0;
 
     virtual Choice getChoice() = 0;
     virtual void giveResult(Payoff result, Choice oppChoice) = 0;

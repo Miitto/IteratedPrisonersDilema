@@ -8,7 +8,7 @@ namespace strats {
   public:
     AllD(const cli::Args& args) : Strategy(args) {}
 
-    cli::Strategy getStrat() override { return cli::Strategy::ALLD; }
+    cli::Strategy getStrat() const override { return cli::Strategy::ALLD; }
 
     Choice getChoice() override { return Choice::DEFECT; }
     void giveResult(Payoff, Choice) override {}
