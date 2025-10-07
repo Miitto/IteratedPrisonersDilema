@@ -1,4 +1,5 @@
 #include "tournament.hpp"
+#include "colors.hpp"
 #include "game.hpp"
 
 #include <iostream>
@@ -70,41 +71,111 @@ ScoreMatrix::getAverageScores() const {
   return totals;
 }
 
+namespace {
+  void printTextMatrix(std::ostream& os,
+                       const std::vector<std::vector<double>>& matrix,
+                       const std::vector<cli::Strategy>& strategies,
+                       bool useColors, double maxScore) {
+    size_t n = matrix.size();
+    size_t maxStratLen = 0;
+    for (const auto& strat : strategies) {
+      std::ostringstream ss;
+      ss << strat;
+      maxStratLen = std::max(maxStratLen, ss.str().length());
+    }
+    os << "Score Matrix:\n";
+    os << std::setw(maxStratLen) << ' ';
+    for (size_t j = 0; j < n; ++j) {
+      os << std::setw(maxStratLen + 1) << strategies[j];
+    }
+    os << "\n";
+    for (size_t i = 0; i < n; ++i) {
+      os << std::setw(maxStratLen) << strategies[i] << ":";
+      for (size_t j = 0; j < n; ++j) {
+        if (useColors) {
+          auto value = matrix[i][j];
+          auto lerpAmount = std::min(1.0, value / maxScore);
+
+          RGBColor startColor(255, 50, 50); // Red
+          RGBColor endColor(50, 255, 50);   // Green
+
+          RGBColor lerpedColor = startColor.lerp(endColor, lerpAmount);
+
+          os << "\033[38;2;" << lerpedColor.r << ";" << lerpedColor.g << ";"
+             << lerpedColor.b << "m";
+        }
+        os << std::fixed << std::setprecision(2) << std::setw(maxStratLen)
+           << matrix[i][j] << "\033[39m ";
+      }
+      os << "\n";
+    }
+  }
+
+  void printTextAverageScores(
+      std::ostream& os,
+      const std::vector<std::pair<cli::Strategy, double>>& avgScores,
+      bool useColors, double maxScore) {
+    os << "\nAverage Scores:\n";
+    size_t maxStratLen = 0;
+    for (const auto& [strat, _] : avgScores) {
+      std::ostringstream ss;
+      ss << strat;
+      maxStratLen = std::max(maxStratLen, ss.str().length());
+    }
+    for (const auto& [strat, score] : avgScores) {
+      os << std::setw(maxStratLen) << strat << ": ";
+      if (useColors) {
+        RGBColor startColor(255, 0, 0); // Red
+        RGBColor endColor(0, 255, 0);   // Green
+        double lerpAmount =
+            std::clamp(score / maxScore, 0.0, 1.0); // Assuming max score ~5
+        RGBColor lerpedColor = startColor.lerp(endColor, lerpAmount);
+        os << "\033[38;2;" << lerpedColor.r << ";" << lerpedColor.g << ";"
+           << lerpedColor.b << "m";
+      }
+      os << std::fixed << std::setprecision(2) << score;
+      if (useColors) {
+        os << "\033[39m"; // Reset to default color
+      }
+      os << "\n";
+    }
+  }
+
+  void printJsonMatrix(std::ostream& os,
+                       const std::vector<std::vector<double>>& matrix,
+                       const std::vector<cli::Strategy>& strats) {
+    os << "{\n";
+    for (int i = 0; i < matrix.size(); ++i) {
+      os << "  \"" << strats[i] << "\": [\n";
+      for (int j = 0; j < matrix[i].size(); ++j) {
+        os << "    {\n      \"name\": \"" << strats[j]
+           << "\",\n      \"avg\": " << matrix[i][j] << "\n    }";
+        if (j != matrix[i].size()) {
+          os << ",";
+        }
+        os << "\n";
+      }
+      os << "  ]";
+      if (i != matrix.size() - 1) {
+        os << ",";
+      }
+      os << "\n";
+    }
+    os << "}\n";
+  }
+} // namespace
+
 std::ostream& operator<<(std::ostream& os, const ScoreMatrix& sm) {
   const auto& matrix = sm.getMatrix();
   size_t n = matrix.size();
 
   switch (sm.m_args.format) {
   case cli::Format::TEXT: {
-    size_t maxStratLen = 0;
-    for (const auto& strat : sm.m_args.strategies) {
-      std::ostringstream ss;
-      ss << strat;
-      maxStratLen = std::max(maxStratLen, ss.str().length());
-    }
-
-    os << "Score Matrix:\n";
-    os << std::setw(maxStratLen) << ' ';
-    for (size_t j = 0; j < n; ++j) {
-      os << std::setw(maxStratLen + 1) << sm.m_args.strategies[j];
-    }
-    os << "\n";
-    for (size_t i = 0; i < n; ++i) {
-      os << std::setw(maxStratLen) << sm.m_args.strategies[i] << ":";
-      for (size_t j = 0; j < n; ++j) {
-        os << std::setw(maxStratLen) << std::fixed << std::setprecision(2)
-           << matrix[i][j] << ' ';
-      }
-      os << "\n";
-    }
-
-    auto totals = sm.getAverageScores();
-    os << "\nAverage Scores:\n";
-    for (const auto& [strat, total] : totals) {
-      os << strat << ": " << std::fixed << std::setprecision(2) << total
-         << "\n";
-    }
-
+    printTextMatrix(os, matrix, sm.m_args.strategies, sm.m_args.savePath == "",
+                    sm.m_args.payoffs.temptation);
+    auto averages = sm.getAverageScores();
+    printTextAverageScores(os, averages, sm.m_args.savePath == "",
+                           sm.m_args.payoffs.temptation);
     break;
   }
   case cli::Format::CSV: {
@@ -123,20 +194,7 @@ std::ostream& operator<<(std::ostream& os, const ScoreMatrix& sm) {
     break;
   }
   case cli::Format::JSON: {
-    os << "{\n  \"score_matrix\": [\n";
-    for (size_t i = 0; i < n; ++i) {
-      os << "    [";
-      for (size_t j = 0; j < n; ++j) {
-        os << std::fixed << std::setprecision(2) << matrix[i][j];
-        if (j < n - 1)
-          os << ", ";
-      }
-      os << "]";
-      if (i < n - 1)
-        os << ",";
-      os << "\n";
-    }
-    os << "  ]\n}\n";
+    printJsonMatrix(os, matrix, sm.m_args.strategies);
     break;
   }
   }

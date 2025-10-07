@@ -49,6 +49,9 @@
   <ItemGroup>
     <None Include="..\.clang-format" />
     <None Include="..\.editorconfig" />
+    <None Include="..\docs\q1.md">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cli\cli.hpp">
@@ -85,6 +88,9 @@
       <Filter>Header Files\strats</Filter>
     </ClInclude>
     <ClInclude Include="tournament.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="colors.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,5 @@
 #include "cli/cli.hpp"
+#include <fstream>
 #include <iostream>
 
 #include "tournament.hpp"
@@ -21,5 +22,20 @@ int main(const int argc, const char* const argv[]) {
   tournament.run();
 
   auto scoreMatrix = tournament.getScoreMatrix();
-  std::cout << scoreMatrix << std::endl;
+  if (args.savePath != "") {
+    std::ofstream ofs(args.savePath);
+    if (!ofs) {
+      std::cerr << "Error: Could not open file for writing: " << args.savePath
+                << std::endl;
+      return 1;
+    }
+    ofs << scoreMatrix;
+    ofs.close();
+    std::cout << "Score matrix saved to " << args.savePath << std::endl;
+  } else {
+    std::cout << scoreMatrix << std::endl;
+  }
+
+  std::cout << "\033[38;2;0;255;0mTournament completed successfully.\033[0m"
+            << std::endl;
 }

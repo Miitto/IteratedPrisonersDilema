@@ -3,6 +3,8 @@
 #include "cli/cli.hpp"
 #include "game.hpp"
 
+#include <unordered_map>
+
 class ScoreMatrix {
   const cli::Args& m_args;
   std::vector<std::vector<double>> m_matrix;

@@ -7,10 +7,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IteratedPrisonersDilema", "
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Baseline|x64 = Baseline|x64
+		Baseline|x86 = Baseline|x86
+		CSV|x64 = CSV|x64
+		CSV|x86 = CSV|x86
 		Example1|x64 = Example1|x64
 		Example1|x86 = Example1|x86
 		Help|x64 = Help|x64
 		Help|x86 = Help|x86
+		JSON|x64 = JSON|x64
+		JSON|x86 = JSON|x86
 		NoNoise|x64 = NoNoise|x64
 		NoNoise|x86 = NoNoise|x86
 		ProberTest|x64 = ProberTest|x64
@@ -19,6 +25,14 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Baseline|x64.ActiveCfg = Baseline|x64
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Baseline|x64.Build.0 = Baseline|x64
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Baseline|x86.ActiveCfg = Baseline|Win32
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Baseline|x86.Build.0 = Baseline|Win32
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.CSV|x64.ActiveCfg = CSV|x64
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.CSV|x64.Build.0 = CSV|x64
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.CSV|x86.ActiveCfg = CSV|Win32
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.CSV|x86.Build.0 = CSV|Win32
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Example1|x64.ActiveCfg = Example1|x64
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Example1|x64.Build.0 = Example1|x64
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Example1|x86.ActiveCfg = Example1|Win32
@@ -27,6 +41,10 @@ Global
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Help|x64.Build.0 = Help|x64
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Help|x86.ActiveCfg = Help|Win32
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Help|x86.Build.0 = Help|Win32
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.JSON|x64.ActiveCfg = JSON|x64
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.JSON|x64.Build.0 = JSON|x64
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.JSON|x86.ActiveCfg = JSON|Win32
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.JSON|x86.Build.0 = JSON|Win32
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.NoNoise|x64.ActiveCfg = NoNoise|x64
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.NoNoise|x64.Build.0 = NoNoise|x64
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.NoNoise|x86.ActiveCfg = NoNoise|Win32
