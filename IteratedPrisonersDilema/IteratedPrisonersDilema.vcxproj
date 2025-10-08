@@ -94,7 +94,7 @@
   <ItemGroup>
     <None Include="..\.clang-format" />
     <None Include="..\.editorconfig" />
-    <None Include="..\docs\q1.md" />
+    <None Include="..\docs\questions.md" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bracket.hpp" />
