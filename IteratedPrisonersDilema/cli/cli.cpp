@@ -167,7 +167,7 @@ namespace cli {
     Option<bool> evolve("evolve", false);
     Option<uint32_t> population("population", 100);
     Option<uint32_t> generations("generations", 50);
-    Option<double> mutationRate("mutation", 0.01);
+    Option<double> mutationRate("mutation", 0.0);
     Option<bool> verbose("verbose", false);
 
     Option<bool> help("help", false);

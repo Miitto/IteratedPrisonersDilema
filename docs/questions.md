@@ -24,9 +24,9 @@ Options:
   --save <path>              Path to save results to (default: none)
   --load <path>              Path to load results from (default: none)
   --evolve                   Whether to run an evolution. Its presence indicates true and its absence indicates false, although `0`, `1`, `true` and `false` can be used to set the value explicitly.simulation instead of a round robin tournament (default: false)
-  --population <uint32_t>    Population size for evolution (default: 100)
+  --population <uint32_t>    Starting population size per strategy for evolution (default: 100)
   --generations <uint32_t>   Number of generations for evolution (default: 50)
-  --mutation <double>        Mutation rate for evolution (default: 0.01)
+  --mutation <double>        Mutation rate for evolution (default: 0.0)
   --verbose                  Whether to print verbose output.
   --help                     Show this help message
 ```
