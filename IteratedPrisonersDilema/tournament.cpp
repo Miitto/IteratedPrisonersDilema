@@ -5,14 +5,10 @@
 #include <iostream>
 
 void Tournament::run() {
-  for (size_t i = 0; i < m_args.strategies.size(); ++i) {
-    for (size_t j = i; j < m_args.strategies.size(); ++j) {
-      auto& strat1 = m_args.strategies[i];
-      auto& strat2 = m_args.strategies[j];
-
-      if (m_args.verbose) {
-        std::clog << "Playing " << strat1 << " vs " << strat2 << "...\n";
-      }
+  for (size_t i = 0; i < m_strategies.size(); ++i) {
+    for (size_t j = i; j < m_strategies.size(); ++j) {
+      auto& strat1 = m_strategies[i];
+      auto& strat2 = m_strategies[j];
 
       Bracket bracket(m_args, strat1, strat2);
       bracket.play();

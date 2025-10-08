@@ -11,6 +11,8 @@ Global
 		Baseline|x86 = Baseline|x86
 		CSV|x64 = CSV|x64
 		CSV|x86 = CSV|x86
+		Evolution|x64 = Evolution|x64
+		Evolution|x86 = Evolution|x86
 		Example1|x64 = Example1|x64
 		Example1|x86 = Example1|x86
 		Exploiters|x64 = Exploiters|x64
@@ -37,6 +39,10 @@ Global
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.CSV|x64.Build.0 = CSV|x64
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.CSV|x86.ActiveCfg = CSV|Win32
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.CSV|x86.Build.0 = CSV|Win32
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Evolution|x64.ActiveCfg = Evolution|x64
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Evolution|x64.Build.0 = Evolution|x64
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Evolution|x86.ActiveCfg = Evolution|Win32
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Evolution|x86.Build.0 = Evolution|Win32
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Example1|x64.ActiveCfg = Example1|x64
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Example1|x64.Build.0 = Example1|x64
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Example1|x86.ActiveCfg = Example1|Win32

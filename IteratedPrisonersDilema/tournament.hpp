@@ -25,10 +25,13 @@ public:
 class Tournament {
   const cli::Args& m_args;
 
+  const std::vector<cli::Strategy>& m_strategies;
+
   std::vector<Bracket> m_brackets;
 
 public:
-  Tournament(const cli::Args& args) : m_args(args) {}
+  Tournament(const cli::Args& args, const std::vector<cli::Strategy>& strats)
+      : m_args(args), m_strategies(strats) {}
 
   void run();
 

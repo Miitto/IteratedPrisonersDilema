@@ -48,6 +48,9 @@
     <ClCompile Include="bracket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="evolution.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.clang-format" />
@@ -97,6 +100,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="bracket.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="evolution.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

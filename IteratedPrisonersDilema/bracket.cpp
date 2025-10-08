@@ -2,7 +2,9 @@
 #include <algorithm>
 #include <numeric>
 
+#include <mutex>
 #include <sstream>
+#include <thread>
 
 std::ostream& operator<<(std::ostream& os, const BracketResult& res) {
   std::stringstream ss;
@@ -17,10 +19,24 @@ std::ostream& operator<<(std::ostream& os, const BracketResult& res) {
 void Bracket::play() {
   m_games.reserve(m_args.repeats);
 
+  std::vector<std::thread> threads;
+  threads.reserve(m_args.repeats);
+
+  std::mutex mtx;
+
   for (int i = 0; i < m_args.repeats; ++i) {
-    Game game(m_args, m_strat1, m_strat2, i);
-    game.play();
-    m_games.push_back(std::move(game));
+    threads.emplace_back([this, i, &mtx]() {
+      Game game(m_args, m_strat1, m_strat2, i);
+      game.play();
+
+      mtx.lock();
+      m_games.push_back(std::move(game));
+      mtx.unlock();
+    });
+  }
+
+  for (auto& t : threads) {
+    t.join();
   }
 }
 
