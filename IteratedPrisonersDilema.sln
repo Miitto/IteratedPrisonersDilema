@@ -13,10 +13,14 @@ Global
 		CSV|x86 = CSV|x86
 		Example1|x64 = Example1|x64
 		Example1|x86 = Example1|x86
+		Exploiters|x64 = Exploiters|x64
+		Exploiters|x86 = Exploiters|x86
 		Help|x64 = Help|x64
 		Help|x86 = Help|x86
 		JSON|x64 = JSON|x64
 		JSON|x86 = JSON|x86
+		NoiseSweep|x64 = NoiseSweep|x64
+		NoiseSweep|x86 = NoiseSweep|x86
 		NoNoise|x64 = NoNoise|x64
 		NoNoise|x86 = NoNoise|x86
 		ProberTest|x64 = ProberTest|x64
@@ -37,6 +41,10 @@ Global
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Example1|x64.Build.0 = Example1|x64
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Example1|x86.ActiveCfg = Example1|Win32
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Example1|x86.Build.0 = Example1|Win32
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Exploiters|x64.ActiveCfg = Exploiters|x64
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Exploiters|x64.Build.0 = Exploiters|x64
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Exploiters|x86.ActiveCfg = Exploiters|Win32
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Exploiters|x86.Build.0 = Exploiters|Win32
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Help|x64.ActiveCfg = Help|x64
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Help|x64.Build.0 = Help|x64
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.Help|x86.ActiveCfg = Help|Win32
@@ -45,6 +53,10 @@ Global
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.JSON|x64.Build.0 = JSON|x64
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.JSON|x86.ActiveCfg = JSON|Win32
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.JSON|x86.Build.0 = JSON|Win32
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.NoiseSweep|x64.ActiveCfg = NoiseSweep|x64
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.NoiseSweep|x64.Build.0 = NoiseSweep|x64
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.NoiseSweep|x86.ActiveCfg = NoiseSweep0|Win32
+		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.NoiseSweep|x86.Build.0 = NoiseSweep0|Win32
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.NoNoise|x64.ActiveCfg = NoNoise|x64
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.NoNoise|x64.Build.0 = NoNoise|x64
 		{3432D0F6-31C3-4A46-81E5-235E4FD87927}.NoNoise|x86.ActiveCfg = NoNoise|Win32

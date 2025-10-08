@@ -6,13 +6,19 @@
 #include <memory>
 #include <random>
 
+struct RoundResult {
+  strats::Choice choice;
+  double reward;
+  strats::Payoff payoff;
+};
+
 class Game {
   const cli::Args& m_args;
 
   std::unique_ptr<strats::Strategy> m_strat1{};
   std::unique_ptr<strats::Strategy> m_strat2{};
 
-  std::vector<std::pair<strats::Payoff, strats::Payoff>> m_results{};
+  std::vector<std::pair<RoundResult, RoundResult>> m_results{};
 
   std::mt19937 gen;
   std::uniform_real_distribution<double> dist{0.0, 1.0};
@@ -25,13 +31,16 @@ public:
 
   void play();
 
+  inline const std::vector<std::pair<RoundResult, RoundResult>>&
+  getResults() const {
+    return m_results;
+  }
+
   std::pair<double, double> getTotalScores() const;
   std::pair<double, double> getAverageScores() const;
   std::pair<double, double>
   getAverageScores(const std::pair<double, double>& totals) const;
 
-  void printResults(std::ostream& os) const;
-
-  const strats::Strategy& getStrat1() const { return *m_strat1; }
-  const strats::Strategy& getStrat2() const { return *m_strat2; }
+  inline const strats::Strategy& getStrat1() const { return *m_strat1; }
+  inline const strats::Strategy& getStrat2() const { return *m_strat2; }
 };

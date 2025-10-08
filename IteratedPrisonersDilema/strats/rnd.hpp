@@ -9,11 +9,12 @@ namespace strats {
   class Rnd : public Strategy {
     double m_rnd;
 
-    std::mt19937 m_gen{std::random_device{}()};
+    std::mt19937 m_gen;
     std::uniform_real_distribution<double> m_dist{0.0, 1.0};
 
   public:
-    Rnd(const cli::Args& args, double rnd) : Strategy(args), m_rnd(rnd) {}
+    Rnd(const cli::Args& args, double rnd, int seed)
+        : Strategy(args), m_rnd(rnd), m_gen(seed) {}
 
     cli::Strategy getStrat() const override { return cli::Strategy{m_rnd}; }
 

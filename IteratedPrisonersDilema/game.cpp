@@ -16,9 +16,9 @@ Game::Game(const cli::Args& args, cli::Strategy strat1, cli::Strategy strat2,
     : m_args(args), gen(args.seed + repeat) {
 
   auto makeStrat =
-      [this](cli::Strategy s) -> std::unique_ptr<strats::Strategy> {
+      [&, this](cli::Strategy s) -> std::unique_ptr<strats::Strategy> {
     if (s.isRnd()) {
-      return std::make_unique<strats::Rnd>(m_args, s.rnd());
+      return std::make_unique<strats::Rnd>(m_args, s.rnd(), args.seed + repeat);
     }
 
     switch (s.simple()) {
@@ -81,15 +81,25 @@ void Game::playRound() {
     choice2 = flipChoice(choice2);
   }
 
-  auto pair =
+  auto payoffPair =
       RESULT_MATRIX[static_cast<int>(choice1)][static_cast<int>(choice2)];
 
-  auto& [result1, result2] = pair;
+  auto& [result1, result2] = payoffPair;
 
   s1.giveResult(result1, choice2);
   s2.giveResult(result2, choice1);
 
-  m_results.push_back(pair);
+  m_results.emplace_back(
+      RoundResult{
+          .choice = choice1,
+          .reward = strats::getPayoffValue(m_args.payoffs, result1),
+          .payoff = result1,
+      },
+      RoundResult{
+          .choice = choice2,
+          .reward = strats::getPayoffValue(m_args.payoffs, result2),
+          .payoff = result2,
+      });
 }
 
 void Game::play() {
@@ -102,8 +112,8 @@ std::pair<double, double> Game::getTotalScores() const {
   double total1 = 0.0;
   double total2 = 0.0;
   for (auto& [r1, r2] : m_results) {
-    total1 += strats::getPayoffValue(m_args.payoffs, r1);
-    total2 += strats::getPayoffValue(m_args.payoffs, r2);
+    total1 += r1.reward;
+    total2 += r2.reward;
   }
   return {total1, total2};
 }
@@ -116,23 +126,4 @@ Game::getAverageScores(const std::pair<double, double>& totals) const {
 std::pair<double, double> Game::getAverageScores() const {
   auto totals = getTotalScores();
   return getAverageScores(totals);
-}
-
-void Game::printResults(std::ostream& os) const {
-  os << m_strat1->getStrat() << " vs " << m_strat2->getStrat() << " results:\n";
-
-  if (m_args.verbose) {
-    for (auto& [r1, r2] : m_results) {
-      os << "  " << r1 << " - " << r2 << "\n";
-    }
-  }
-
-  auto totals = getTotalScores();
-
-  os << "Total scores: " << totals.first << " - " << totals.second << "\n";
-
-  auto averages = getAverageScores(totals);
-
-  os << "Average scores: " << averages.first << " - " << averages.second
-     << "\n";
 }

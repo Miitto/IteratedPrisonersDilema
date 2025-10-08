@@ -1,21 +1,23 @@
 #pragma once
 
 #include "cli/cli.hpp"
-#include "game.hpp"
 
-#include <unordered_map>
+#include "bracket.hpp"
 
 class ScoreMatrix {
   const cli::Args& m_args;
-  std::vector<std::vector<double>> m_matrix;
+  std::vector<std::vector<BracketResult>> m_matrix;
 
 public:
-  ScoreMatrix(const cli::Args& args, std::vector<std::vector<double>>&& matrix)
+  ScoreMatrix(const cli::Args& args,
+              std::vector<std::vector<BracketResult>>&& matrix)
       : m_args(args), m_matrix(matrix) {}
 
-  const std::vector<std::vector<double>>& getMatrix() const { return m_matrix; }
+  const std::vector<std::vector<BracketResult>>& getMatrix() const {
+    return m_matrix;
+  }
 
-  std::vector<std::pair<cli::Strategy, double>> getAverageScores() const;
+  std::vector<std::pair<cli::Strategy, BracketResult>> getResults() const;
 
   friend std::ostream& operator<<(std::ostream& os, const ScoreMatrix& sm);
 };
@@ -23,7 +25,7 @@ public:
 class Tournament {
   const cli::Args& m_args;
 
-  std::vector<Game> m_games;
+  std::vector<Bracket> m_brackets;
 
 public:
   Tournament(const cli::Args& args) : m_args(args) {}
