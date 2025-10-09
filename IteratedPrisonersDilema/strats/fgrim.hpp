@@ -12,6 +12,7 @@ namespace strats {
     FGrim(const cli::Args& args) : Strategy(args) {}
 
     cli::Strategy getStrat() const override { return cli::Strategy::FGRIM; }
+    double getBudget() const override { return 2.0; }
 
     Choice getChoice() override {
       return m_triggered ? Choice::DEFECT : Choice::COOPERATE;

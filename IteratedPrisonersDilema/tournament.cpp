@@ -99,10 +99,17 @@ namespace {
     os << "Score Matrix:\n";
     os << std::setw(maxStratLen + 1) << ' ';
     for (size_t j = 0; j < n; ++j) {
+      if (useColors) {
+
+        os << cli::getStrategyColor(strategies[j]);
+      }
       os << std::setw(maxWidth + 1) << strategies[j];
     }
     os << "\n";
     for (size_t i = 0; i < n; ++i) {
+      if (useColors) {
+        os << cli::getStrategyColor(strategies[i]);
+      }
       os << std::setw(maxStratLen) << strategies[i] << ": ";
       for (size_t j = 0; j < n; ++j) {
         if (useColors) {
@@ -114,8 +121,7 @@ namespace {
 
           RGBColor lerpedColor = startColor.lerp(endColor, lerpAmount);
 
-          os << "\033[38;2;" << lerpedColor.r << ";" << lerpedColor.g << ";"
-             << lerpedColor.b << "m";
+          os << lerpedColor;
         }
         os << std::fixed << std::setprecision(2) << std::setw(maxWidth)
            << matrix[i][j] << "\033[39m ";
@@ -136,6 +142,9 @@ namespace {
       maxStratLen = std::max(maxStratLen, ss.str().length());
     }
     for (const auto& [strat, score] : avgScores) {
+      if (useColors) {
+        os << cli::getStrategyColor(strat);
+      }
       os << std::setw(maxStratLen) << strat << ": ";
       if (useColors) {
         RGBColor startColor(255, 0, 0); // Red
@@ -143,8 +152,7 @@ namespace {
         double lerpAmount = std::clamp(score.mean / maxScore, 0.0,
                                        1.0); // Assuming max score ~5
         RGBColor lerpedColor = startColor.lerp(endColor, lerpAmount);
-        os << "\033[38;2;" << lerpedColor.r << ";" << lerpedColor.g << ";"
-           << lerpedColor.b << "m";
+        os << lerpedColor;
       }
       os << std::fixed << std::setprecision(2) << score;
       if (useColors) {
@@ -178,6 +186,39 @@ namespace {
     }
     os << "}\n";
   }
+
+  void printCsvMatrix(std::ostream& os,
+                      const std::vector<std::vector<BracketResult>>& matrix,
+                      const std::vector<cli::Strategy>& strats) {
+    size_t n = matrix.size();
+    os << ",";
+    for (auto& strat : strats) {
+      os << "," << strat << ",,";
+    }
+    os << "\n,";
+    for (size_t j = 0; j < n; ++j) {
+      os << "low,mean,high,";
+    }
+    os << "\n";
+
+    auto printNum = [&](double num) {
+      os << std::fixed << std::setprecision(2) << num;
+    };
+
+    for (size_t i = 0; i < n; ++i) {
+      os << strats[i] << ",";
+      for (size_t j = 0; j < n; ++j) {
+        auto& v = matrix[i][j];
+        printNum(v.low);
+        os << ",";
+        printNum(v.mean);
+        os << ",";
+        printNum(v.high);
+        os << ",";
+      }
+      os << "\n";
+    }
+  }
 } // namespace
 
 std::ostream& operator<<(std::ostream& os, const ScoreMatrix& sm) {
@@ -193,23 +234,12 @@ std::ostream& operator<<(std::ostream& os, const ScoreMatrix& sm) {
                            sm.m_args.payoffs.temptation);
     break;
   }
-  case cli::Format::CSV: {
-    os << "Player";
-    for (size_t j = 0; j < n; ++j) {
-      os << ",P" << j;
-    }
-    os << "\n";
-    for (size_t i = 0; i < n; ++i) {
-      os << "P" << i;
-      for (size_t j = 0; j < n; ++j) {
-        os << "," << std::fixed << std::setprecision(2) << matrix[i][j];
-      }
-      os << "\n";
-    }
-    break;
-  }
   case cli::Format::JSON: {
     printJsonMatrix(os, matrix, sm.m_args.strategies);
+    break;
+  }
+  case cli::Format::CSV: {
+    printCsvMatrix(os, matrix, sm.m_args.strategies);
     break;
   }
   }

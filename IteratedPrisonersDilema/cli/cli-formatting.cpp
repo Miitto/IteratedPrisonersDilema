@@ -1,6 +1,35 @@
 #include "cli.hpp"
 
 namespace cli {
+  RGBColor getStrategyColor(cli::Strategy s) {
+    using Simple = cli::Strategy::Simple;
+    if (s.isRnd()) {
+      return RGBColor(255, s.rnd() * 255, 128);
+    }
+    switch (s.simple()) {
+    case Simple::ALLC:
+      return RGBColor(50, 255, 50); // Green
+    case Simple::ALLD:
+      return RGBColor(255, 50, 50); // Red
+    case Simple::TFT:
+      return RGBColor(100, 100, 255); // Blue
+    case Simple::GRIM:
+      return RGBColor(255, 165, 50); // Orange
+    case Simple::PAVLOV:
+      return RGBColor(255, 255, 50); // Yellow
+    case Simple::CONTRITE:
+      return RGBColor(50, 255, 255); // Cyan
+    case Simple::PROBER:
+      return RGBColor(128, 50, 128); // Purple
+    case Simple::FGRIM:
+      return RGBColor(255, 192, 203); // Pink
+    case Simple::SPROBER:
+      return RGBColor(165, 42, 42); // Brown
+    default:
+      return RGBColor(255, 255, 255); // White for unknown strategies
+    }
+  }
+
   std::ostream& operator<<(std::ostream& os, const Payoffs& p) {
     os << "{T: " << p.temptation << ", R: " << p.reward
        << ", P: " << p.punishment << ", S: " << p.sucker << "}";
@@ -8,42 +37,45 @@ namespace cli {
   }
 
   std::ostream& operator<<(std::ostream& os, const Strategy s) {
+    std::stringstream ss;
+
     if (s.isRnd()) {
-      std::stringstream ss;
       ss << "RND" << s.rnd();
-      os << ss.str();
     } else {
       auto simple = s.simple();
       switch (simple) {
       case Strategy::ALLC:
-        os << "ALLC";
+        ss << "ALLC";
         break;
       case Strategy::ALLD:
-        os << "ALLD";
+        ss << "ALLD";
         break;
       case Strategy::TFT:
-        os << "TFT";
+        ss << "TFT";
         break;
       case Strategy::GRIM:
-        os << "GRIM";
+        ss << "GRIM";
         break;
       case Strategy::PAVLOV:
-        os << "PAVLOV";
+        ss << "PAVLOV";
         break;
       case Strategy::CONTRITE:
-        os << "CONTRITE";
+        ss << "CONTRITE";
         break;
       case Strategy::PROBER:
-        os << "PROBER";
+        ss << "PROBER";
         break;
       case Strategy::FGRIM:
-        os << "FGRIM";
+        ss << "FGRIM";
         break;
       case Strategy::SPROBER:
-        os << "SPROBER";
+        ss << "SPROBER";
         break;
       }
-    }
+    };
+
+    os << ss.str();
+
     return os;
   }
 

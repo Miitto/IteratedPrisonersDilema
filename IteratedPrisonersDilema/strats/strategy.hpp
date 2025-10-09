@@ -3,6 +3,7 @@
 #include <ostream>
 
 #include "../cli/cli.hpp"
+#include "../colors.hpp"
 
 namespace strats {
 
@@ -38,10 +39,12 @@ namespace strats {
 
   public:
     virtual cli::Strategy getStrat() const = 0;
+    virtual double getBudget() const = 0;
 
     virtual Choice getChoice() = 0;
     virtual void giveResult(Payoff result, Choice oppChoice) = 0;
 
     virtual ~Strategy() = default;
   };
+
 } // namespace strats

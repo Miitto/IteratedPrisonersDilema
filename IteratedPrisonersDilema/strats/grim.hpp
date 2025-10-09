@@ -11,6 +11,7 @@ namespace strats {
     Grim(const cli::Args& args) : Strategy(args) {}
 
     cli::Strategy getStrat() const override { return cli::Strategy::GRIM; }
+    double getBudget() const override { return 2.0; }
 
     Choice getChoice() override {
       return m_triggered ? Choice::DEFECT : Choice::COOPERATE;

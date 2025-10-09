@@ -68,7 +68,7 @@ void Game::playRound() {
   auto choice1 = s1.getChoice();
   auto choice2 = s2.getChoice();
 
-  if (dist(gen) < m_args.epsilon) { // Mistake for strat1
+  if (dist(gen) < m_args.epsilon) {
     choice1 = !choice1;
   }
 
@@ -82,15 +82,25 @@ void Game::playRound() {
   s1.giveResult(result1, choice2);
   s2.giveResult(result2, choice1);
 
+  double reward1 = strats::getPayoffValue(m_args.payoffs, result1);
+  double reward2 = strats::getPayoffValue(m_args.payoffs, result2);
+
+  if (m_args.enableBudget) {
+    double budget1 = s1.getBudget();
+    double budget2 = s2.getBudget();
+    reward1 = std::max(0.0, reward1 - budget1);
+    reward2 = std::max(0.0, reward2 - budget2);
+  }
+
   m_results.emplace_back(
       RoundResult{
           .choice = choice1,
-          .reward = strats::getPayoffValue(m_args.payoffs, result1),
+          .reward = reward1,
           .payoff = result1,
       },
       RoundResult{
           .choice = choice2,
-          .reward = strats::getPayoffValue(m_args.payoffs, result2),
+          .reward = reward2,
           .payoff = result2,
       });
 }

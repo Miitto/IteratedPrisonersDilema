@@ -1,38 +1,47 @@
 #include "evolution.hpp"
+#include "tournament.hpp"
 #include <iostream>
 #include <numeric>
 
-std::vector<double> replicationDynamics(const std::vector<double>& distribution,
-                                        const std::vector<double>& fitnesses) {
-  double totalFitness =
-      std::accumulate(fitnesses.begin(), fitnesses.end(), 0.0);
-  double avgFitness = totalFitness / fitnesses.size();
+namespace {
+  std::vector<PopDist>
+  replicationDynamics(const std::vector<PopDist>& distribution,
+                      const std::vector<double>& fitnesses,
+                      const uint32_t population) {
+    double totalFitness =
+        std::accumulate(fitnesses.begin(), fitnesses.end(), 0.0);
+    double avgFitness = totalFitness / fitnesses.size();
 
-  std::vector<double> newDistribution(distribution.size(), 0.0);
+    std::vector<double> proportions(distribution.size(), 0.0);
 
-  for (size_t i = 0; i < distribution.size(); ++i) {
-    if (avgFitness > 0) {
-      newDistribution[i] = distribution[i] * (fitnesses[i] / avgFitness);
-    } else {
-      newDistribution[i] = distribution[i]; // Avoid division by zero
+    for (size_t i = 0; i < distribution.size(); ++i) {
+      proportions[i] = distribution[i].proportion * (fitnesses[i] / avgFitness);
     }
-  }
 
-  // Normalize to ensure proportions sum to 1
-  double sum =
-      std::accumulate(newDistribution.begin(), newDistribution.end(), 0.0);
-  if (sum > 0) {
-    for (auto& val : newDistribution) {
-      val /= sum;
+    // Normalize to ensure proportions sum to 1
+    double sum = std::accumulate(proportions.begin(), proportions.end(), 0.0);
+    if (sum > 0) {
+      for (auto& val : proportions) {
+        val /= sum;
+      }
     }
-  }
 
-  return newDistribution;
-}
+    std::vector<PopDist> newDistribution;
+    newDistribution.reserve(distribution.size());
+
+    std::transform(
+        proportions.begin(), proportions.end(),
+        std::back_inserter(newDistribution),
+        [population](double prop) { return PopDist(prop, population); });
+
+    return newDistribution;
+  }
+} // namespace
 
 void Evolution::run() {
-  std::vector<double> distribution(m_args.strategies.size(),
-                                   1.0 / m_args.strategies.size());
+  std::vector<PopDist> distribution(
+      m_args.strategies.size(),
+      PopDist(1.0 / m_args.strategies.size(), m_args.population));
 
   m_proportions.reserve(m_args.generations);
 
@@ -42,9 +51,7 @@ void Evolution::run() {
     strategies.reserve(m_args.population);
 
     for (size_t i = 0; i < distribution.size(); ++i) {
-      for (int j = 0; j < static_cast<int>(
-                              std::round(distribution[i] * m_args.population));
-           ++j) {
+      for (int j = 0; j < distribution[i].count; ++j) {
         strategies.push_back(m_args.strategies[i]);
       }
     }
@@ -52,9 +59,9 @@ void Evolution::run() {
     if (m_args.verbose) {
       std::cout << "Generation " << gen + 1 << "\n";
       for (size_t i = 0; i < m_args.strategies.size(); ++i) {
-        auto pop = distribution[i] * m_args.population;
-        std::clog << m_args.strategies[i] << ": " << pop << " ("
-                  << (pop / m_args.population) * 100 << "%)\n";
+        auto& pop = distribution[i];
+        std::clog << m_args.strategies[i] << ": " << pop.count << " ("
+                  << pop.proportion * 100 << "%)\n";
       }
     }
 
@@ -76,12 +83,13 @@ void Evolution::run() {
       fitnesses[index] = result.mean;
     }
 
-    distribution = replicationDynamics(distribution, fitnesses);
+    distribution =
+        replicationDynamics(distribution, fitnesses, m_args.population);
 
     if (m_args.mutationRate == 0.0) {
       uint32_t aboveZero = false;
       for (const auto& val : distribution) {
-        if (val > 0.0) {
+        if (val.count > 0.0) {
           ++aboveZero;
         }
       }
@@ -93,5 +101,30 @@ void Evolution::run() {
         break;
       }
     }
+  }
+}
+
+namespace {
+  void printEvoCSV(std::ostream& os, const std::vector<cli::Strategy>& strats,
+                   const std::vector<std::vector<PopDist>>& dist) {
+    for (auto& strat : strats) {
+      os << strat << ",";
+    }
+    os << "\n";
+    for (auto& generation : dist) {
+      for (auto& dist : generation) {
+        os << dist.count << ",";
+      }
+      os << "\n";
+    }
+  }
+} // namespace
+
+void Evolution::printResults(std::ostream& os) const {
+  switch (m_args.format) {
+  case cli::Format::CSV: {
+    printEvoCSV(os, m_args.strategies, m_proportions);
+    break;
+  }
   }
 }

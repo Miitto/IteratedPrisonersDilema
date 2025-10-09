@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../colors.hpp"
 #include <concepts>
 #include <filesystem>
 #include <string_view>
@@ -15,6 +16,20 @@ namespace cli {
     double reward;
     double punishment;
     double sucker;
+  };
+
+  class XX {
+    enum Strats {
+      // ..
+    };
+
+    bool isRnd;
+    union U {
+      Strats strat;
+      double rnd;
+    };
+
+    U u;
   };
 
   // TODO: Change this to a union of Strategy or double for RND's randomness.
@@ -80,10 +95,13 @@ namespace cli {
     uint32_t generations;
     double mutationRate;
     bool verbose;
+    bool enableBudget;
 
     static std::variant<Args, std::tuple<std::string, uint32_t>>
     fromArgs(const std::vector<std::string_view> args);
 
     friend std::ostream& operator<<(std::ostream& os, const Args& args);
   };
+
+  RGBColor getStrategyColor(cli::Strategy s);
 } // namespace cli

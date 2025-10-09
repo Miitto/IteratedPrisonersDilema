@@ -18,6 +18,7 @@ namespace strats {
     Prober(const cli::Args& args) : Tft(args) {}
 
     cli::Strategy getStrat() const override { return cli::Strategy::PROBER; }
+    double getBudget() const override { return 3.0; }
 
     Choice getChoice() override {
       if (m_turn < 4)
@@ -33,10 +34,6 @@ namespace strats {
         return Tft::giveResult(p, oppChoice);
 
       if (oppChoice == Choice::DEFECT) {
-        if (m_args.verbose) {
-          std::clog << "Prober detected defection at turn " << m_turn
-                    << ", switching to TFT behavior." << std::endl;
-        }
         m_everDefected = true;
       }
 

@@ -9,6 +9,7 @@ namespace strats {
     AllD(const cli::Args& args) : Strategy(args) {}
 
     cli::Strategy getStrat() const override { return cli::Strategy::ALLD; }
+    double getBudget() const override { return 1.0; }
 
     Choice getChoice() override { return Choice::DEFECT; }
     void giveResult(Payoff, Choice) override {}

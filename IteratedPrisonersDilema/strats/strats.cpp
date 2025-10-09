@@ -32,4 +32,5 @@ namespace strats {
     }
     return os;
   }
+
 } // namespace strats

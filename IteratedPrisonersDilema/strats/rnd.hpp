@@ -17,6 +17,7 @@ namespace strats {
         : Strategy(args), m_rnd(rnd), m_gen(seed) {}
 
     cli::Strategy getStrat() const override { return cli::Strategy{m_rnd}; }
+    double getBudget() const override { return 1.0; }
 
     Choice getChoice() override {
       return m_dist(m_gen) < m_rnd ? Choice::COOPERATE : Choice::DEFECT;

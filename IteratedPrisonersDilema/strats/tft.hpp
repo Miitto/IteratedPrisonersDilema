@@ -11,6 +11,7 @@ namespace strats {
     Tft(const cli::Args& args) : Strategy(args) {}
 
     cli::Strategy getStrat() const override { return cli::Strategy::TFT; }
+    double getBudget() const override { return 2.0; }
 
     Choice getChoice() override { return m_opponentLastChoice; }
     void giveResult(Payoff, Choice oppChoice) override {

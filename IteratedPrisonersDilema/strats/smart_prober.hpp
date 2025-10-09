@@ -53,6 +53,7 @@ namespace strats {
     SmartProber(const cli::Args& args) : CTft(args) {}
 
     cli::Strategy getStrat() const override { return cli::Strategy::SPROBER; }
+    double getBudget() const override { return 4.0; }
 
     Choice getChoice() override {
       auto pick = [this]() {

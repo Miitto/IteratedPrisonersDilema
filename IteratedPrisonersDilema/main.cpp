@@ -34,6 +34,21 @@ int runEvolution(const cli::Args& args) {
   Evolution evolution{args};
   evolution.run();
 
+  if (args.savePath != "") {
+    std::ofstream ofs(args.savePath);
+    if (!ofs) {
+      std::cerr << "Error: Could not open file for writing: " << args.savePath
+                << std::endl;
+      return 1;
+    }
+    evolution.printResults(ofs);
+    ofs.close();
+    std::cout << "Score matrix saved to " << args.savePath << std::endl;
+  } else {
+    evolution.printResults(std::cout);
+    std::cout << std::endl;
+  }
+
   std::cout << "\033[38;2;0;255;0mEvolution completed successfully.\033[0m"
             << std::endl;
 

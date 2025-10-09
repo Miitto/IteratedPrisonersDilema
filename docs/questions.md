@@ -6,7 +6,7 @@ Each strategy is represented as a class deriving from `strats::Strategy` which d
 - `giveResult(Payoff yourPayoff, Choice opponentsChoice) -> void`.
 Each derived class is expected to hold its own state, although the base `strats::Strategy` class holds a `protected` constant reference to the parsed CLI parameters should they be needed.
 
-The `Game` class stores two `std::unique_ptr<strats::Strategy>`s and runs a privided number of rounds between these two strategies, which may store persisted state between rounds.
+The `Game` class stores two `std::unique_ptr<strats::Strategy>`s and runs a provided number of rounds between these two strategies, which may store persisted state between rounds.
 
 ## Cli Interface
 The help text is shown below:
@@ -18,8 +18,8 @@ Options:
   --repeats <uint32_t>       Number of matches per pair of strategies (default: 10)
   --epsilon <double>         Probability of a mistake per move (default: 0.0)
   --seed <uint32_t>          Seed for random number generator (default: 0)
-  --payoff <T,R,P,S>         Payoff values as four doubles seperated by commas or spaces (default: 5,3,1,0)
-  --strategies <STRATEGIES>  Comma or space seperated list of strategies to use. Strategies are one of ALLC, ALLD, TFT, GRIM, PAVLOV, CONTRITE, PROBER, or RNDX where X is a floating point number in [0,1] with one digit before the decimal point and at least one after (e.g `RND0.3` or `RND1.0`, not `RND.3` or `RND1.`). (default: ALLC,ALLD)
+  --payoff <T,R,P,S>         Payoff values as four doubles separated by commas or spaces (default: 5,3,1,0)
+  --strategies <STRATEGIES>  Comma or space separated list of strategies to use. Strategies are one of ALLC, ALLD, TFT, GRIM, PAVLOV, CONTRITE, PROBER, or RNDX where X is a floating point number in [0,1] with one digit before the decimal point and at least one after (e.g `RND0.3` or `RND1.0`, not `RND.3` or `RND1.`). (default: ALLC,ALLD)
   --format <text|json|csv>   Output format (default: text)
   --save <path>              Path to save results to (default: none)
   --load <path>              Path to load results from (default: none)
@@ -87,7 +87,7 @@ The score matrix shows the average score for each strategy against every other s
 
 As seen above, GRIM, TFT and PAVLOV are the top 3 strategies in this noiseless scenario.
 The cooperative strategies did best, however the strategies more capable of resisting a persistent defector had an advantage - with Grim being the most consistent as it performed better against both random strategies.
-RND0.7 did worst, as it suffered due to being too cooperative, yet not cooperative enough to not trigger retaliation from TFT or GRIM, while defecting too much to correctly exploit the more vaulnerable strategies.
+RND0.7 did worst, as it suffered due to being too cooperative, yet not cooperative enough to not trigger retaliation from TFT or GRIM, while defecting too much to correctly exploit the more vulnerable strategies.
 
 # Question 2
 
@@ -97,7 +97,7 @@ This is done independently for both players each round, so the player needs to c
 
 ## Noise Sweep
 
-All tournaments were run with the following parameters, with only the `--epsilon` value being modfied:
+All tournaments were run with the following parameters, with only the `--epsilon` value being modified:
 ```
 rounds: 1000
 repeats: 100
@@ -205,7 +205,7 @@ CONTRITE:    3.00     2.21     2.18     2.15     2.13
 ```
 
 The matrix shows that Contrite is the most robust strategy smaller amounts of noise, but as noise increases TFT becomes more effective as the mistakes become more frequent.
-This seems to be due to the cost of apologising becoming greater than the benefits as stretegy begins to be undermined with chaos.
+This seems to be due to the cost of apologizing becoming greater than the benefits as strategy begins to be undermined with chaos.
 If the trend continues, it looks as if TFT will overtake CONTRITE at around 0.25 noise, and PAVLOV will take the lead later on as noise increases further.
 
 Grim performs the worst in all scenarios, as its unforgiving nature means that a single mistake can lead to a permanent loss of cooperation, which is very punishing in a noisy environment where all other strategies are more content to cooperate when possible.
@@ -259,10 +259,10 @@ The cost of PROBER's initial probing move is negligible over a long series of ro
 With fewer rounds it would fall behind TFT, CONTRITE and PAVLOV as the cost of probing would be more significant - especially if ALLC was not in the pool to exploit and inflate the average.
 ALLD had a slightly higher average against PROBER and ALLC than the other cooperative strategies due to PROBER's delayed reaction due to the set starting probe, but this was not enough to make it competitive overall - coming solidly in last.
 
-However, as noise is introduced, PROBER's effectiveness decreases as it can be misled into defecting against cooperative strategies due to mistakes, leading to lower overall payoffs, while also misdetecting ALLC so it cannot exploit it.
+However, as noise is introduced, PROBER's effectiveness decreases as it can be misled into defecting against cooperative strategies due to mistakes, leading to lower overall payoffs, while also miss-detecting ALLC so it cannot exploit it.
 This lets CONTRITE take the lead as it is very resistant to noise due to its forgiving nature, allowing it to maintain cooperation with other strategies even when mistakes occur.
 
-ALLD did surprisingly well in the noisy scenario, coming second overall. This is likely due to its ability to capitalise on the mistakes of cooperative strategies, as they may get thrown off by the occasional cooperation from ALLD due to noise, leading to higher payoffs for ALLD when it returns to defecting almost immediatly.
+ALLD did surprisingly well in the noisy scenario, coming second overall. This is likely due to its ability to capitalize on the mistakes of cooperative strategies, as they may get thrown off by the occasional cooperation from ALLD due to noise, leading to higher payoffs for ALLD when it returns to defecting almost immediatly.
 
 ### Exploiting strategies
 - PROBER
@@ -274,4 +274,31 @@ ALLD did surprisingly well in the noisy scenario, coming second overall. This is
 
 ### Resisting Exploitation
 Any form of TFT (TFT, CONTRITE, none-exploiting PROBER) resisted being exploited well, as any attempted exploitation would be met with retaliation resulting in a lower payoff for both strategies.
-PAVLOV will end up playing the prefered choice of the opponent on average, so it will cooperate with cooperative strategies and defect against defectors, averaging to a moderate payoff against all strategies.
+PAVLOV will end up playing the preferred choice of the opponent on average, so it will cooperate with cooperative strategies and defect against defectors, averaging to a moderate payoff against all strategies.
+
+# Question 4
+
+## Evolution Implementation
+
+The `Evolution` class runs a simulation of an evolving population of strategies over a number of generations. It takes the following parameters from the CLI:
+- `--evolve`: Whether to enable evolution
+- `--population <uint32_t>`: The starting population. Each enabled strategy will have an equal share of this total population.
+- `--mutation <double>`: The chance of a strategy mutating into another.
+
+## Experiments
+
+Graphs for various experiments are located in Excel spreadsheets at `docs/Evolution/`.
+
+### ALLC, ALLD, TFT, GRIM, PAVLOV
+
+In an environment with no noise, ALLD quickly went extinct as the other strategies fell into mutual cooperation.
+The only strategy vulnerable to ALLD was ALLC, however ALLC managed to survive on the higher average given by cooperating with the other 4 strategies - albeit ending with a lower population.
+
+After ALLD went extinct the other strategies fell into stable cooperation and the population for each stabilized there.
+
+The chaos brought in by noise allowed ALLD to survive till the end since other strategies failed to maintain cooperation due to mistakes. This kept ALLC's average lower, nearly bringing it to extinction by generation 50.
+ALLD was still the second worst strategy on average, but it was enough to keep it in the population as it decreased at a slower rate.
+
+PAVLOV's population didn't change much in the noisy scenario, ending with barely more population than it began with.
+
+TFT and GRIM were the most successful strategies in both scenarios, with GRIM outperforming TFT in the noisy scenario.

@@ -168,8 +168,10 @@ namespace cli {
     Option<uint32_t> population("population", 100);
     Option<uint32_t> generations("generations", 50);
     Option<double> mutationRate("mutation", 0.0);
-    Option<bool> verbose("verbose", false);
 
+    Option<bool> enableBudget("enable-budget", false);
+
+    Option<bool> verbose("verbose", false);
     Option<bool> help("help", false);
 
     auto it = args.cbegin();
@@ -191,6 +193,8 @@ namespace cli {
       PARSE(population);
       PARSE(generations);
       PARSE(mutationRate);
+      PARSE(enableBudget);
+
       PARSE(help);
       PARSE(verbose);
 
@@ -238,6 +242,8 @@ namespace cli {
           "evolution (default: 50)\n"
           "  --mutation <double>        Mutation rate for evolution "
           "(default: 0.01)\n"
+          "  --enable-budget            Whether to enable strategic budget "
+          "complexity.\n"
           "  --verbose                  Whether to print verbose output.\n"
           "  --help                     Show this help message\n";
       return std::tuple{helpMsg, 0u};

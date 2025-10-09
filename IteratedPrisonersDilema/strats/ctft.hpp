@@ -27,6 +27,7 @@ namespace strats {
     CTft(const cli::Args& args) : Strategy(args) {}
 
     cli::Strategy getStrat() const override { return cli::Strategy::CONTRITE; }
+    double getBudget() const override { return 3.0; }
 
     Choice getChoice() override {
       m_ownLastChoice = m_opponentLastChoice;
