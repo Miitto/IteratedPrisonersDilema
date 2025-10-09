@@ -17,8 +17,7 @@ namespace strats {
       switch (p) {
       case Payoff::Temptation:
       case Payoff::Sucker:
-        choice =
-            choice == Choice::COOPERATE ? Choice::DEFECT : Choice::COOPERATE;
+        choice = !choice;
         break;
       default: {
         // No-op

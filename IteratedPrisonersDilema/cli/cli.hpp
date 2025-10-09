@@ -22,7 +22,17 @@ namespace cli {
   // from this enum
   class Strategy {
   public:
-    enum Simple { ALLC, ALLD, TFT, GRIM, PAVLOV, CONTRITE, PROBER };
+    enum Simple {
+      ALLC,
+      ALLD,
+      TFT,
+      GRIM,
+      PAVLOV,
+      CONTRITE,
+      PROBER,
+      FGRIM,
+      SPROBER
+    };
 
   private:
     bool isRandom : 1;

@@ -215,7 +215,7 @@ namespace cli {
           "5,3,1,0)\n"
           "  --strategies <STRATEGIES>  Comma or space seperated list "
           "of strategies to use. Strategies are one of ALLC, "
-          "ALLD, TFT, GRIM, PAVLOV, CONTRITE, PROBER, or RNDX "
+          "ALLD, TFT, GRIM, PAVLOV, CONTRITE, PROBER, FGRIM or RNDX "
           "where X is a floating point number in [0,1] with one digit before "
           "the decimal point and at least one after (e.g `RND0.3` or `RND1.0`, "
           "not "
@@ -389,6 +389,10 @@ namespace cli {
             strategies.emplace_back(Strategy::CONTRITE);
           } else if (token == "PROBER") {
             strategies.emplace_back(Strategy::PROBER);
+          } else if (token == "FGRIM") {
+            strategies.emplace_back(Strategy::FGRIM);
+          } else if (token == "SPROBER") {
+            strategies.emplace_back(Strategy::SPROBER);
           } else {
             return std::string{"Unknown strategy: " + std::string{token}};
           }

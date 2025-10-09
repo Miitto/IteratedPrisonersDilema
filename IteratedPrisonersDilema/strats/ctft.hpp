@@ -7,7 +7,21 @@ namespace strats {
   class CTft : public Strategy {
     bool didAccidentallyDefect = false;
     Choice m_opponentLastChoice = Choice::COOPERATE;
+
+  protected:
     Choice m_ownLastChoice = Choice::COOPERATE;
+
+    bool didSwap(Payoff p, Choice choice) {
+      Choice actual = Choice::COOPERATE;
+      switch (p) {
+      case Payoff::Temptation:
+      case Payoff::Punishment:
+        actual = Choice::DEFECT;
+        break;
+      }
+
+      return actual != choice;
+    }
 
   public:
     CTft(const cli::Args& args) : Strategy(args) {}
@@ -25,20 +39,7 @@ namespace strats {
         m_opponentLastChoice = oppChoice;
       }
 
-      Choice intended = m_ownLastChoice;
-      Choice actual;
-      switch (p) {
-      case Payoff::Reward:
-      case Payoff::Sucker:
-        actual = Choice::COOPERATE;
-        break;
-      case Payoff::Temptation:
-      case Payoff::Punishment:
-        actual = Choice::DEFECT;
-        break;
-      }
-
-      if (intended == Choice::COOPERATE && actual == Choice::DEFECT) {
+      if (m_ownLastChoice == Choice::COOPERATE && didSwap(p, m_ownLastChoice)) {
         didAccidentallyDefect = true;
       } else {
         didAccidentallyDefect = false;

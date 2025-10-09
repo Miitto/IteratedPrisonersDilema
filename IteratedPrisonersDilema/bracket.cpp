@@ -22,16 +22,27 @@ void Bracket::play() {
   std::vector<std::thread> threads;
   threads.reserve(m_args.repeats);
 
+  uint32_t numThreads = std::thread::hardware_concurrency();
+
+  uint32_t chunkSize = (m_args.repeats + numThreads - 1) / numThreads;
+
   std::mutex mtx;
 
-  for (int i = 0; i < m_args.repeats; ++i) {
-    threads.emplace_back([this, i, &mtx]() {
-      Game game(m_args, m_strat1, m_strat2, i);
-      game.play();
-
-      mtx.lock();
-      m_games.push_back(std::move(game));
-      mtx.unlock();
+  for (uint32_t i = 0; i < m_args.repeats; i += chunkSize) {
+    threads.emplace_back([&, this, i, chunkSize]() {
+      uint32_t end = std::min(i + chunkSize, m_args.repeats);
+      std::vector<Game> localGames;
+      localGames.reserve(end - i);
+      for (uint32_t j = i; j < end; ++j) {
+        Game game(m_args, m_strat1, m_strat2, j);
+        game.play();
+        localGames.push_back(std::move(game));
+      }
+      // Lock and append localGames to m_games
+      std::lock_guard<std::mutex> lock(mtx);
+      for (auto& g : localGames) {
+        m_games.push_back(std::move(g));
+      }
     });
   }
 

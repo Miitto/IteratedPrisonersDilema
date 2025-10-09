@@ -5,10 +5,12 @@
 #include "strats/allc.hpp"
 #include "strats/alld.hpp"
 #include "strats/ctft.hpp"
+#include "strats/fgrim.hpp"
 #include "strats/grim.hpp"
 #include "strats/pavlov.hpp"
 #include "strats/prober.hpp"
 #include "strats/rnd.hpp"
+#include "strats/smart_prober.hpp"
 #include "strats/tft.hpp"
 
 Game::Game(const cli::Args& args, cli::Strategy strat1, cli::Strategy strat2,
@@ -40,8 +42,15 @@ Game::Game(const cli::Args& args, cli::Strategy strat1, cli::Strategy strat2,
     case cli::Strategy::CONTRITE: {
       return std::make_unique<strats::CTft>(m_args);
     }
-    case cli::Strategy::PROBER:
+    case cli::Strategy::PROBER: {
       return std::make_unique<strats::Prober>(m_args);
+    }
+    case cli::Strategy::FGRIM: {
+      return std::make_unique<strats::FGrim>(m_args);
+    }
+    case cli::Strategy::SPROBER: {
+      return std::make_unique<strats::SmartProber>(m_args);
+    }
     }
 
     // Should be unreachable
@@ -52,15 +61,6 @@ Game::Game(const cli::Args& args, cli::Strategy strat1, cli::Strategy strat2,
   m_strat2 = makeStrat(strat2);
 }
 
-namespace {
-  constexpr std::pair<strats::Payoff, strats::Payoff> RESULT_MATRIX[2][2] = {
-      {{strats::Payoff::Reward, strats::Payoff::Reward},         // C, C
-       {strats::Payoff::Sucker, strats::Payoff::Temptation}},    // C, D
-      {{strats::Payoff::Temptation, strats::Payoff::Sucker},     // D, C
-       {strats::Payoff::Punishment, strats::Payoff::Punishment}} // D, D
-  };
-}
-
 void Game::playRound() {
   auto& s1 = *m_strat1;
   auto& s2 = *m_strat2;
@@ -68,23 +68,16 @@ void Game::playRound() {
   auto choice1 = s1.getChoice();
   auto choice2 = s2.getChoice();
 
-  auto flipChoice = [](strats::Choice c) -> strats::Choice {
-    return (c == strats::Choice::COOPERATE) ? strats::Choice::DEFECT
-                                            : strats::Choice::COOPERATE;
-  };
-
   if (dist(gen) < m_args.epsilon) { // Mistake for strat1
-    choice1 = flipChoice(choice1);
+    choice1 = !choice1;
   }
 
   if (dist(gen) < m_args.epsilon) {
-    choice2 = flipChoice(choice2);
+    choice2 = !choice2;
   }
 
-  auto payoffPair =
-      RESULT_MATRIX[static_cast<int>(choice1)][static_cast<int>(choice2)];
-
-  auto& [result1, result2] = payoffPair;
+  auto result1 = choice1 & choice2;
+  auto result2 = choice2 & choice1;
 
   s1.giveResult(result1, choice2);
   s2.giveResult(result2, choice1);

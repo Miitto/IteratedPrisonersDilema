@@ -36,6 +36,12 @@ namespace cli {
       case Strategy::PROBER:
         os << "PROBER";
         break;
+      case Strategy::FGRIM:
+        os << "FGRIM";
+        break;
+      case Strategy::SPROBER:
+        os << "SPROBER";
+        break;
       }
     }
     return os;

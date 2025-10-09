@@ -2,13 +2,41 @@
 #include <iostream>
 #include <numeric>
 
+std::vector<double> replicationDynamics(const std::vector<double>& distribution,
+                                        const std::vector<double>& fitnesses) {
+  double totalFitness =
+      std::accumulate(fitnesses.begin(), fitnesses.end(), 0.0);
+  double avgFitness = totalFitness / fitnesses.size();
+
+  std::vector<double> newDistribution(distribution.size(), 0.0);
+
+  for (size_t i = 0; i < distribution.size(); ++i) {
+    if (avgFitness > 0) {
+      newDistribution[i] = distribution[i] * (fitnesses[i] / avgFitness);
+    } else {
+      newDistribution[i] = distribution[i]; // Avoid division by zero
+    }
+  }
+
+  // Normalize to ensure proportions sum to 1
+  double sum =
+      std::accumulate(newDistribution.begin(), newDistribution.end(), 0.0);
+  if (sum > 0) {
+    for (auto& val : newDistribution) {
+      val /= sum;
+    }
+  }
+
+  return newDistribution;
+}
+
 void Evolution::run() {
   std::vector<double> distribution(m_args.strategies.size(),
                                    1.0 / m_args.strategies.size());
 
   m_proportions.reserve(m_args.generations);
 
-  for (int gen = 0; gen < m_args.generations; ++gen) {
+  for (uint32_t gen = 0; gen < m_args.generations; ++gen) {
     m_proportions.push_back(distribution);
     std::vector<cli::Strategy> strategies;
     strategies.reserve(m_args.population);
@@ -39,26 +67,31 @@ void Evolution::run() {
 
     auto scores = tournament.getScoreMatrix().getResults();
 
-    std::vector<double> fitnesses;
-    fitnesses.reserve(scores.size());
+    std::vector<double> fitnesses(scores.size());
 
     for (const auto& [strat, result] : scores) {
-      fitnesses.push_back(result.mean);
+      auto it =
+          std::find(m_args.strategies.begin(), m_args.strategies.end(), strat);
+      size_t index = std::distance(m_args.strategies.begin(), it);
+      fitnesses[index] = result.mean;
     }
 
-    double totalFitness =
-        std::accumulate(fitnesses.begin(), fitnesses.end(), 0.0);
+    distribution = replicationDynamics(distribution, fitnesses);
 
-    double fitnessAvg = totalFitness / fitnesses.size();
+    if (m_args.mutationRate == 0.0) {
+      uint32_t aboveZero = false;
+      for (const auto& val : distribution) {
+        if (val > 0.0) {
+          ++aboveZero;
+        }
+      }
 
-    std::vector<double> newDistribution(m_args.strategies.size(), 0);
-
-    for (size_t i = 0; i < fitnesses.size(); ++i) {
-      double proportion = fitnesses[i] / totalFitness;
-      newDistribution[i] =
-          static_cast<double>(distribution[i]) * (proportion + 0.5);
+      if (aboveZero < 2) {
+        if (m_args.verbose) {
+          std::clog << "All but one strategies extinct, stopping early\n";
+        }
+        break;
+      }
     }
-
-    distribution = std::move(newDistribution);
   }
 }

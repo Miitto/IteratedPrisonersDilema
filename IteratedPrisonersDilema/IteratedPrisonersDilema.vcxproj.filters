@@ -58,6 +58,9 @@
     <None Include="..\docs\questions.md">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="custom-strats.md">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cli\cli.hpp">
@@ -104,6 +107,12 @@
     </ClInclude>
     <ClInclude Include="evolution.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="strats\fgrim.hpp">
+      <Filter>Header Files\strats</Filter>
+    </ClInclude>
+    <ClInclude Include="strats\smart_prober.hpp">
+      <Filter>Header Files\strats</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
