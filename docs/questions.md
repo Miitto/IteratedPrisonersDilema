@@ -302,3 +302,32 @@ ALLD was still the second worst strategy on average, but it was enough to keep i
 PAVLOV's population didn't change much in the noisy scenario, ending with barely more population than it began with.
 
 TFT and GRIM were the most successful strategies in both scenarios, with GRIM outperforming TFT in the noisy scenario by a small margin.
+
+### ALLC, ALLD, TFT, GRIM, PAVLOV, CONTRITE, PROBER
+
+In both noisy and noiseless environments, PROBER was one of the most successful strategies up until the point where ALLC went extinct.
+At that point in the noiseless scenario, PROBER started to get punished by GRIM leading to a rapid decline in population until GRIM went extinct, at which point PROBER stabilized at a low population.
+In the noisy environment, PROBER was extremely dominant until generation 33 when ALLC went extinct, at which point its population plummeted as CONTRITE took over. This shows that in an environment with ALLC PROBER can thrive, even with GRIM present.
+However as soon as it looses its prey, PROBER will begin to suffer.
+
+In both the noisy and noiseless scenarios, ALLD went extinct first - at generation 8 without noise and at generation 21 with. This clearly shows that ALLD is not a viable long-term strategy in an evolving cooperative population.
+
+In the noisy environment, CONTRITE was the most successful strategy, with its forgiving nature allowing it to maintain cooperation with other strategies despite the noise - ending with over 2/3 of the total population.
+
+CONTRITE, TFT and PAVLOV stabilized in the noiseless scenario each having an equal share of the population, with PROBER taking the small remainder.
+
+# Question 5
+
+## Strategic Complexity Budget
+
+SCB can be enabled by passing `--enable-budget` to the CLI. This will subtract the strategies cost from each payoff they receive.
+
+## Experiments
+
+
+### ALLC, ALLD, TFT, GRIM, PAVLOV, CONTRITE, PROBER
+
+In both environments, all more complex strategies went extinct very quickly, with only ALLC and ALLD remaining by generation 11.
+ALLC dominated in the noiseless environment as it was the simplest strategy in a cooperative environment.
+
+In the noisy environment, ALLD was able to barely survive due to the chaos preventing stable cooperation and then after all other complex strategies went extinct due to complexity, it could exploit ALLC to its heart's content.

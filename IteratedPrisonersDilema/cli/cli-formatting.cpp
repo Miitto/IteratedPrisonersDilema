@@ -123,6 +123,7 @@ namespace cli {
        << "population: " << args.population << "\n"
        << "generations: " << args.generations << "\n"
        << "mutationRate: " << args.mutationRate << "\n"
+       << "enableBudget: " << (args.enableBudget ? "true" : "false") << "\n"
        << "verbose: " << (args.verbose ? "true" : "false") << "\n";
     return os;
   }

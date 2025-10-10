@@ -28,34 +28,14 @@ namespace cli {
           { parse<T>(it, end) } -> std::same_as<std::variant<T, std::string>>;
         };
 
+    enum ParseResult { SUCCESS = 1, FAILURE = 2, INCOMPLETE = 0 };
+
     template <typename ARG>
       requires Parsable<ARG>
     class Option {
       const std::string_view name;
       bool parsed = false;
       ARG value;
-
-    public:
-      operator ARG() { return value; }
-
-      void set(const ARG val) {
-        value = val;
-        parsed = true;
-      }
-      [[nodiscard]] ARG get() const { return value; }
-      [[nodiscard]] bool isParsed() const { return parsed; }
-      [[nodiscard]] const std::string_view& getName() const { return name; }
-
-      static bool isAnOption(const std::string_view str) {
-        return str.starts_with("--");
-      }
-
-      constexpr Option(const std::string_view name, const ARG defaultVal)
-          : name{name}, value(defaultVal) {}
-
-      bool is(const std::string_view str) const {
-        return isAnOption(str) && str.substr(2) == name;
-      }
 
       std::variant<ARG, std::string>
       parse(std::vector<std::string_view>::const_iterator strs,
@@ -107,39 +87,57 @@ namespace cli {
                              std::get<std::string>(parsed)};
         }
       }
+
+    public:
+      operator ARG() { return value; }
+
+      void set(const ARG val) {
+        value = val;
+        parsed = true;
+      }
+      [[nodiscard]] ARG get() const { return value; }
+      [[nodiscard]] bool isParsed() const { return parsed; }
+      [[nodiscard]] const std::string_view& getName() const { return name; }
+
+      static bool isAnOption(const std::string_view str) {
+        return str.starts_with("--");
+      }
+
+      constexpr Option(const std::string_view name, const ARG defaultVal)
+          : name{name}, value(defaultVal) {}
+
+      bool is(const std::string_view str) const {
+        return isAnOption(str) && str.substr(2) == name;
+      }
+
+      ParseResult
+      tryParse(std::vector<std::string_view>::const_iterator it,
+               const std::vector<std::string_view>::const_iterator end) {
+        if (it == end) {
+          return ParseResult::INCOMPLETE;
+        }
+
+        if (!is(*it)) {
+          return ParseResult::INCOMPLETE;
+        }
+
+        auto parsed = this->parse(it, end);
+        if (parsed.index() == 0) {
+          auto val = std::get<T>(parsed);
+          if (isParsed()) {
+            std::cerr << "Warning: Option --" << std::string{opt.getName()}
+                      << " specified multiple times. Using last value (" << val
+                      << ")." << std::endl;
+          }
+          set(val);
+          return ParseResult::SUCCESS;
+        } else {
+          std::cerr << std::get<std::string>(parsed) << std::endl;
+          return ParseResult::FAILURE;
+        }
+      }
     };
 
-    enum ParseResult { SUCCESS = 1, FAILURE = 2, INCOMPLETE = 0 };
-
-    template <typename T>
-      requires Parsable<T>
-    ParseResult
-    tryParseInto(Option<T>& opt,
-                 std::vector<std::string_view>::const_iterator it,
-                 const std::vector<std::string_view>::const_iterator end) {
-      if (it == end) {
-        return ParseResult::INCOMPLETE;
-      }
-
-      if (!opt.is(*it)) {
-        return ParseResult::INCOMPLETE;
-      }
-
-      auto parsed = opt.parse(it, end);
-      if (parsed.index() == 0) {
-        auto val = std::get<T>(parsed);
-        if (opt.isParsed()) {
-          std::cerr << "Warning: Option --" << std::string{opt.getName()}
-                    << " specified multiple times. Using last value (" << val
-                    << ")." << std::endl;
-        }
-        opt.set(val);
-        return ParseResult::SUCCESS;
-      } else {
-        std::cerr << std::get<std::string>(parsed) << std::endl;
-        return ParseResult::FAILURE;
-      }
-    }
   } // namespace
 #pragma endregion
 
@@ -149,7 +147,7 @@ namespace cli {
   }
 
 #define PARSE(_OPT)                                                            \
-  parsed |= tryParseInto(_OPT, it, args.cend());                               \
+  parsed |= _OPT.tryParse(it, args.cend());                                    \
   BREAK_IF_FAIL
 
   std::variant<Args, std::tuple<std::string, uint32_t>>
@@ -215,9 +213,9 @@ namespace cli {
           "  --seed <uint32_t>          Seed for random number "
           "generator (default: 0)\n"
           "  --payoff <T,R,P,S>         Payoff values as four "
-          "doubles seperated by commas or spaces (default: "
+          "doubles separated by commas or spaces (default: "
           "5,3,1,0)\n"
-          "  --strategies <STRATEGIES>  Comma or space seperated list "
+          "  --strategies <STRATEGIES>  Comma or space separated list "
           "of strategies to use. Strategies are one of ALLC, "
           "ALLD, TFT, GRIM, PAVLOV, CONTRITE, PROBER, FGRIM or RNDX "
           "where X is a floating point number in [0,1] with one digit before "
@@ -265,20 +263,23 @@ namespace cli {
           << std::endl;
     }
 
-    return Args{.rounds = rounds,
-                .repeats = repeats,
-                .epsilon = epsilon,
-                .seed = seed,
-                .payoffs = payoffs,
-                .strategies = strategies,
-                .format = format,
-                .savePath = save,
-                .loadFile = load,
-                .evolve = evolve,
-                .population = population,
-                .generations = generations,
-                .mutationRate = mutationRate,
-                .verbose = verbose};
+    return Args{
+        .rounds = rounds,
+        .repeats = repeats,
+        .epsilon = epsilon,
+        .seed = seed,
+        .payoffs = payoffs,
+        .strategies = strategies,
+        .format = format,
+        .savePath = save,
+        .loadFile = load,
+        .evolve = evolve,
+        .population = population,
+        .generations = generations,
+        .mutationRate = mutationRate,
+        .verbose = verbose,
+        .enableBudget = enableBudget,
+    };
   }
 
 #pragma region ParseSpecializations
