@@ -4,6 +4,11 @@
 #include "strategy.hpp"
 
 namespace strats {
+  /// <summary>
+  /// Strategy that plays tit-for-tat, but if it accidentally defects due to
+  /// noise and gets retaliated against, it will cooperate for a turn in an
+  /// attempt to apologize.
+  /// </summary>
   class CTft : public Strategy {
     bool didAccidentallyDefect = false;
     Choice m_opponentLastChoice = Choice::COOPERATE;

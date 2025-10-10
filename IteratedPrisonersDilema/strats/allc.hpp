@@ -4,6 +4,9 @@
 #include "strategy.hpp"
 
 namespace strats {
+  /// <summary>
+  /// Strategy that always cooperates
+  /// </summary>
   class AllC : public Strategy {
   public:
     AllC(const cli::Args& args) : Strategy(args) {}

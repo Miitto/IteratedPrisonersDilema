@@ -4,6 +4,10 @@
 #include "strategy.hpp"
 
 namespace strats {
+  /// <summary>
+  /// Strategy that cooperates until the opponent defects twice in a row, then
+  /// defects forever
+  /// </summary>
   class FGrim : public Strategy {
     bool m_triggered = false;
     Choice m_oppLastChoice = Choice::COOPERATE;
@@ -17,10 +21,13 @@ namespace strats {
     Choice getChoice() override {
       return m_triggered ? Choice::DEFECT : Choice::COOPERATE;
     }
+
     void giveResult(Payoff, Choice oppChoice) override {
+      // Trigger if opponent defects twice in a row
       if (oppChoice == Choice::DEFECT && m_oppLastChoice == Choice::DEFECT)
         m_triggered = true;
 
+      // Store opponents choice
       m_oppLastChoice = oppChoice;
     }
 

@@ -4,6 +4,10 @@
 #include "strategy.hpp"
 
 namespace strats {
+  /// <summary>
+  /// Strategy that cooperates until the opponent defects once, then defects
+  /// forever.
+  /// </summary>
   class Grim : public Strategy {
     bool m_triggered = false;
 

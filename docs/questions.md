@@ -301,4 +301,4 @@ ALLD was still the second worst strategy on average, but it was enough to keep i
 
 PAVLOV's population didn't change much in the noisy scenario, ending with barely more population than it began with.
 
-TFT and GRIM were the most successful strategies in both scenarios, with GRIM outperforming TFT in the noisy scenario.
+TFT and GRIM were the most successful strategies in both scenarios, with GRIM outperforming TFT in the noisy scenario by a small margin.

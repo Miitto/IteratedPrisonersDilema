@@ -6,6 +6,9 @@
 #include <random>
 
 namespace strats {
+  /// <summary>
+  /// Strategy that cooperates with a fixed probability.
+  /// </summary>
   class Rnd : public Strategy {
     double m_rnd;
 

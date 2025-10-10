@@ -4,6 +4,10 @@
 #include "strategy.hpp"
 
 namespace strats {
+  /// <summary>
+  /// Strategy that starts by cooperating, and afterwards repeats its last move
+  /// if it got a reward or punishment, else it swaps its last move.
+  /// </summary>
   class Pavlov : public Strategy {
     Choice choice = Choice::COOPERATE;
 

@@ -6,6 +6,11 @@
 #include <iostream>
 
 namespace strats {
+  /// <summary>
+  /// Strategy that starts by probing the opponent, then tries to exploit ALLC
+  /// by always defecting, otherwise it plays TFT to cooperate with nice
+  /// strategies.
+  /// </summary>
   class Prober : public Tft {
     uint32_t m_turn = 0;
     bool m_everDefected = false;

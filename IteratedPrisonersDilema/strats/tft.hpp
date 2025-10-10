@@ -4,6 +4,9 @@
 #include "strategy.hpp"
 
 namespace strats {
+  /// <summary>
+  /// Strategy that starts by cooperating, then mimics the opponent's last move.
+  /// </summary>
   class Tft : public Strategy {
     Choice m_opponentLastChoice = Choice::COOPERATE;
 

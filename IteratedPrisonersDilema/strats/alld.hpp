@@ -4,6 +4,9 @@
 #include "strategy.hpp"
 
 namespace strats {
+  /// <summary>
+  /// Strategy that always defects
+  /// </summary>
   class AllD : public Strategy {
   public:
     AllD(const cli::Args& args) : Strategy(args) {}
