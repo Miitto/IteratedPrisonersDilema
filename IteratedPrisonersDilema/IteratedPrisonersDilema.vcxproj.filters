@@ -61,6 +61,15 @@
     <None Include="custom-strats.md">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="..\docs\Design Rationale.docx">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\docs\Evolution\ALLC ALLD TFT GRIM PAVLOV CONTRITE PROBER.xlsx">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\docs\Evolution\ALLC ALLD TFT GRIM PAVLOV.xlsx">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cli\cli.hpp">

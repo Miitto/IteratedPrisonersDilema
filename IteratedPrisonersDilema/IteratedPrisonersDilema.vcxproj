@@ -119,6 +119,9 @@
   <ItemGroup>
     <None Include="..\.clang-format" />
     <None Include="..\.editorconfig" />
+    <None Include="..\docs\Design Rationale.docx" />
+    <None Include="..\docs\Evolution\ALLC ALLD TFT GRIM PAVLOV CONTRITE PROBER.xlsx" />
+    <None Include="..\docs\Evolution\ALLC ALLD TFT GRIM PAVLOV.xlsx" />
     <None Include="..\docs\questions.md" />
     <None Include="custom-strats.md" />
   </ItemGroup>
