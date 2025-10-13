@@ -123,9 +123,9 @@ namespace cli {
 
         auto parsed = this->parse(it, end);
         if (parsed.index() == 0) {
-          auto val = std::get<T>(parsed);
+          auto val = std::get<ARG>(parsed);
           if (isParsed()) {
-            std::cerr << "Warning: Option --" << std::string{opt.getName()}
+            std::cerr << "Warning: Option --" << std::string{getName()}
                       << " specified multiple times. Using last value (" << val
                       << ")." << std::endl;
           }
@@ -227,7 +227,7 @@ namespace cli {
           "  --save <path>              Path to save results to "
           "(default: none)\n"
           "  --load <path>              Path to load results from "
-          "(default: none)\n"
+          "(default: none) [Not Implemented]\n"
           "  --evolve                   Whether to run an evolution. Its "
           "presence indicates true and its absence indicates false, although "
           "`0`, `1`, `true` and `false` can "
@@ -239,7 +239,7 @@ namespace cli {
           "  --generations <uint32_t>   Number of generations for "
           "evolution (default: 50)\n"
           "  --mutation <double>        Mutation rate for evolution "
-          "(default: 0.01)\n"
+          "(default: 0.01) [Not implemented]\n"
           "  --enable-budget            Whether to enable strategic budget "
           "complexity.\n"
           "  --verbose                  Whether to print verbose output.\n"
@@ -351,7 +351,7 @@ namespace cli {
       }
       if (set != 4) {
         return std::string{"Expected 4 payoffs, T,R,P,S where T R P S are "
-                           "doubles seperated by either commas or spaces."};
+                           "doubles separated by either commas or spaces."};
       }
       return payoffs;
     }
