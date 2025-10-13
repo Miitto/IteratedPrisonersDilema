@@ -3,6 +3,10 @@
 #include "game.hpp"
 #include <optional>
 
+/// <summary>
+/// Contains the results of a bracketed series of games, including mean score
+/// and confidence interval.
+/// </summary>
 struct BracketResult {
   double mean;
   double low;
@@ -11,6 +15,11 @@ struct BracketResult {
   friend std::ostream& operator<<(std::ostream& os, const BracketResult& br);
 };
 
+/// <summary>
+/// Runs a series of games between two strategies and collects statistics on the
+/// outcomes. Runs `repeats` number of games, each consisting of `rounds`
+/// rounds. Repeats are run in parallel.
+/// </summary>
 class Bracket {
   const cli::Args& m_args;
   std::vector<Game> m_games{};

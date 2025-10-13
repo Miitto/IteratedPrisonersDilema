@@ -16,6 +16,15 @@ namespace cli {
 
 #pragma region OptionParsing
   namespace {
+    /// <summary>
+    /// Attempts to parse a value of type T from an iterator of string views.
+    /// </summary>
+    /// <typeparam name="T">The type to parse from the string views.</typeparam>
+    /// <param name="strs">Iterator pointing to the beginning of the range of
+    /// string views to parse.</param> <param name="end">Iterator pointing to
+    /// the end of the range of string views.</param> <returns>A std::variant
+    /// containing the parsed value of type T on success, or a std::string with
+    /// an error message on failure.</returns>
     template <typename T>
     std::variant<T, std::string>
     parse(std::vector<std::string_view>::const_iterator strs,
@@ -28,8 +37,18 @@ namespace cli {
           { parse<T>(it, end) } -> std::same_as<std::variant<T, std::string>>;
         };
 
-    enum ParseResult { SUCCESS = 1, FAILURE = 2, INCOMPLETE = 0 };
+    /// <summary>
+    /// Represents the possible outcomes of a parsing operation. Success,
+    /// Failure, or Other (this is a different option).
+    /// </summary>
+    enum ParseResult { SUCCESS = 1, FAILURE = 2, OTHER = 0 };
 
+    /// <summary>
+    /// Represents a command-line option that can be parsed from arguments,
+    /// supporting custom types and default values.
+    /// </summary>
+    /// <typeparam name="ARG">The type of the option's value. Must satisfy the
+    /// Parsable concept.</typeparam>
     template <typename ARG>
       requires Parsable<ARG>
     class Option {
@@ -103,6 +122,12 @@ namespace cli {
         return str.starts_with("--");
       }
 
+      /// <summary>
+      /// Constructs an Option object with a specified name and default value.
+      /// </summary>
+      /// <param name="name">The name of the option.</param>
+      /// <param name="defaultVal">The default value to assign to the
+      /// option.</param>
       constexpr Option(const std::string_view name, const ARG defaultVal)
           : name{name}, value(defaultVal) {}
 
@@ -110,15 +135,22 @@ namespace cli {
         return isAnOption(str) && str.substr(2) == name;
       }
 
+      /// <summary>
+      /// Attempts to parse the option from the provided iterator.
+      /// </summary>
+      /// <param name="it">Iterator pointing at the start of the range to
+      /// parse</param> <param name="end">Iterator pointing to the end of the
+      /// range to parse</param> <returns>Whether the parsing was successful,
+      /// failed, or the iterator contained a different option</returns>
       ParseResult
       tryParse(std::vector<std::string_view>::const_iterator it,
                const std::vector<std::string_view>::const_iterator end) {
         if (it == end) {
-          return ParseResult::INCOMPLETE;
+          return ParseResult::OTHER;
         }
 
         if (!is(*it)) {
-          return ParseResult::INCOMPLETE;
+          return ParseResult::OTHER;
         }
 
         auto parsed = this->parse(it, end);

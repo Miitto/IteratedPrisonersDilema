@@ -3,6 +3,9 @@
 #include "cli/cli.hpp"
 #include <vector>
 
+/// <summary>
+/// Holds the proportion and count of a strategy in the population.
+/// </summary>
 struct PopDist {
   double proportion;
   uint32_t count;
@@ -13,6 +16,10 @@ struct PopDist {
         count(static_cast<uint32_t>(std::round(prop * totalPop))) {}
 };
 
+/// <summary>
+/// Runs an evolutionary simulation based on the provided command-line
+/// arguments.
+/// </summary>
 class Evolution {
   const cli::Args& m_args;
 

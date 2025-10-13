@@ -6,12 +6,19 @@
 #include <memory>
 #include <random>
 
+/// <summary>
+/// Result of a single round for a player, including their choice, reward, and
+/// which payoff gave that reward.
+/// </summary>
 struct RoundResult {
   strats::Choice choice;
   double reward;
   strats::Payoff payoff;
 };
 
+/// <summary>
+/// Runs a series of rounds between two strategies and collects the results.
+/// </summary>
 class Game {
   const cli::Args& m_args;
 
