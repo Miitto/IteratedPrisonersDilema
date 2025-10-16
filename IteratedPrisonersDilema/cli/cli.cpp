@@ -27,13 +27,13 @@ namespace cli {
     /// an error message on failure.</returns>
     template <typename T>
     std::variant<T, std::string>
-    parse(std::vector<std::string_view>::const_iterator strs,
-          const std::vector<std::string_view>::const_iterator end);
+    parse(std::vector<std::string_view>::const_iterator& strs,
+          const std::vector<std::string_view>::const_iterator& end);
 
     template <typename T>
     concept Parsable =
-        requires(std::vector<std::string_view>::const_iterator it,
-                 const std::vector<std::string_view>::const_iterator end) {
+        requires(std::vector<std::string_view>::const_iterator& it,
+                 const std::vector<std::string_view>::const_iterator& end) {
           { parse<T>(it, end) } -> std::same_as<std::variant<T, std::string>>;
         };
 
@@ -57,8 +57,8 @@ namespace cli {
       ARG value;
 
       std::variant<ARG, std::string>
-      parse(std::vector<std::string_view>::const_iterator strs,
-            const std::vector<std::string_view>::const_iterator end) {
+      parse(std::vector<std::string_view>::const_iterator& strs,
+            const std::vector<std::string_view>::const_iterator& end) {
         if (strs == end) {
           return std::string{"Expected option --" + std::string(name) + "."};
         }
@@ -143,8 +143,8 @@ namespace cli {
       /// range to parse</param> <returns>Whether the parsing was successful,
       /// failed, or the iterator contained a different option</returns>
       ParseResult
-      tryParse(std::vector<std::string_view>::const_iterator it,
-               const std::vector<std::string_view>::const_iterator end) {
+      tryParse(std::vector<std::string_view>::const_iterator& it,
+               const std::vector<std::string_view>::const_iterator& end) {
         if (it == end) {
           return ParseResult::OTHER;
         }
@@ -206,9 +206,9 @@ namespace cli {
 
     auto it = args.cbegin();
     ++it; // skip program name
-    for (; it != args.cend(); ++it) {
+    for (; it != args.cend();) {
 
-      int parsed = ParseResult::SUCCESS;
+      int parsed = ParseResult::OTHER;
 
       PARSE(rounds);
       PARSE(repeats);
@@ -228,8 +228,9 @@ namespace cli {
       PARSE(help);
       PARSE(verbose);
 
-      if (it != args.cend() && (parsed & ParseResult::SUCCESS) == 0) {
-        return std::tuple{"Unknown option: " + std::string{*it}, 1u};
+      if (it != args.cend() && (parsed & ParseResult::SUCCESS) == 0 &&
+          *it != "") {
+        return std::tuple{"Unknown option: \"" + std::string{*it} + "\"", 1u};
       }
     }
 
@@ -318,15 +319,15 @@ namespace cli {
   namespace {
     template <>
     std::variant<bool, std::string>
-    parse<bool>(std::vector<std::string_view>::const_iterator strs,
-                const std::vector<std::string_view>::const_iterator end) {
+    parse<bool>(std::vector<std::string_view>::const_iterator& strs,
+                const std::vector<std::string_view>::const_iterator& end) {
       return true;
     }
 
     template <>
     std::variant<uint32_t, std::string>
-    parse<uint32_t>(std::vector<std::string_view>::const_iterator strs,
-                    const std::vector<std::string_view>::const_iterator end) {
+    parse<uint32_t>(std::vector<std::string_view>::const_iterator& strs,
+                    const std::vector<std::string_view>::const_iterator& end) {
       std::string_view numStr = *strs;
       ++strs;
       auto num = std::stoul(std::string{numStr});
@@ -335,8 +336,8 @@ namespace cli {
 
     template <>
     std::variant<double, std::string>
-    parse<double>(std::vector<std::string_view>::const_iterator strs,
-                  const std::vector<std::string_view>::const_iterator end) {
+    parse<double>(std::vector<std::string_view>::const_iterator& strs,
+                  const std::vector<std::string_view>::const_iterator& end) {
       std::string_view numStr = *strs;
       ++strs;
       double num = std::stod(std::string{numStr});
@@ -345,8 +346,8 @@ namespace cli {
 
     template <>
     std::variant<Payoffs, std::string>
-    parse(std::vector<std::string_view>::const_iterator strs,
-          const std::vector<std::string_view>::const_iterator end) {
+    parse(std::vector<std::string_view>::const_iterator& strs,
+          const std::vector<std::string_view>::const_iterator& end) {
       Payoffs payoffs;
       int set = 0;
       for (; set < 4 && strs != end; ++strs) {
@@ -390,8 +391,8 @@ namespace cli {
 
     template <>
     std::variant<std::vector<Strategy>, std::string>
-    parse(std::vector<std::string_view>::const_iterator strs,
-          const std::vector<std::string_view>::const_iterator end) {
+    parse(std::vector<std::string_view>::const_iterator& strs,
+          const std::vector<std::string_view>::const_iterator& end) {
       std::vector<Strategy> strategies;
       double randomness = 0.5;
       for (; strs != end; ++strs) {
@@ -442,13 +443,18 @@ namespace cli {
       if (strategies.empty()) {
         return std::string{"Expected at least one strategy."};
       }
+
+      if (strs != end && !Option<std::vector<Strategy>>::isAnOption(*strs)) {
+        ++strs;
+      }
+
       return strategies;
     }
 
     template <>
     std::variant<Format, std::string>
-    parse<Format>(std::vector<std::string_view>::const_iterator strs,
-                  const std::vector<std::string_view>::const_iterator end) {
+    parse<Format>(std::vector<std::string_view>::const_iterator& strs,
+                  const std::vector<std::string_view>::const_iterator& end) {
       std::string_view formatStr = *strs;
       ++strs;
       if (formatStr == "text") {
@@ -465,8 +471,8 @@ namespace cli {
     template <>
     std::variant<std::filesystem::path, std::string>
     parse<std::filesystem::path>(
-        std::vector<std::string_view>::const_iterator strs,
-        const std::vector<std::string_view>::const_iterator end) {
+        std::vector<std::string_view>::const_iterator& strs,
+        const std::vector<std::string_view>::const_iterator& end) {
       std::string_view pathStr = *strs;
       ++strs;
       return std::filesystem::path{std::string{pathStr}};

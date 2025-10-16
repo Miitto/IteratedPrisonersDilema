@@ -56,13 +56,16 @@ void Evolution::run() {
       }
     }
 
-    std::clog << "Generation " << gen + 1 << "\n";
+    std::clog << "Generation " << gen + 1;
     if (m_args.verbose) {
+      std::clog << ":\n";
       for (size_t i = 0; i < m_args.strategies.size(); ++i) {
         auto& pop = distribution[i];
         std::clog << m_args.strategies[i] << ": " << pop.count << " ("
                   << pop.proportion * 100 << "%)\n";
       }
+    } else {
+      std::clog << "\r";
     }
 
     Tournament tournament(m_args, strategies);
