@@ -56,8 +56,8 @@ void Evolution::run() {
       }
     }
 
+    std::clog << "Generation " << gen + 1 << "\n";
     if (m_args.verbose) {
-      std::cout << "Generation " << gen + 1 << "\n";
       for (size_t i = 0; i < m_args.strategies.size(); ++i) {
         auto& pop = distribution[i];
         std::clog << m_args.strategies[i] << ": " << pop.count << " ("
@@ -67,10 +67,6 @@ void Evolution::run() {
 
     Tournament tournament(m_args, strategies);
     tournament.run();
-
-    if (m_args.verbose) {
-      std::clog << "Generation " << (gen + 1) << " done\n";
-    }
 
     auto scores = tournament.getScoreMatrix().getResults();
 
